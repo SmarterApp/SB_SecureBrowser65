@@ -1,0 +1,9 @@
+# Here is a sample JavaScript whitelist file
+# ...
+
+# Some sample entries:
+allowed[*.mozdevgroup.com, ALL];
+allowed[*.brooklynmuseum.org/, ALL];
+allowed[www.webreference.com/programming/javascript/, ALL];
+allowed[developer.netscape.com/, ALL];
+allowed[www.dynamicdrive.com/, ALL];

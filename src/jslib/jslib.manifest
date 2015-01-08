@@ -1,0 +1,5 @@
+content  jslib             jar:jslib.jar!/ xpcnativewrappers=yes
+locale   jslib en-US       jar:jslib.jar!/
+skin     jslib classic/1.0 jar:jslib.jar!/
+content  jsliblive   chrome/jsliblive/
+

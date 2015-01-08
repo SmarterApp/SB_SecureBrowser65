@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>BRPL</string>
+	<key>CFBundleSignature</key>
+	<string>ErPl</string>
+	<key>CFBundleName</key>
+	<string>AudioRecorder.plugin</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.air.audiorecorder.plugin</string>
+	<key>CFBundleExecutable</key>
+	<string>npAIRAudio.dylib</string>
+	<key>LSHasLocalizedDisplayName</key>
+	<false/>
+	<key>WebPluginName</key>
+	<string>AIR Audio Recorder Plug-in</string>
+	<key>WebPluginDescription</key>
+	<string>AIR Audio Recorder.</string>
+	<key>CFBundleShortVersionString</key>
+	<string>__VERSION__</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en_US</string>
+	<key>CFBundleVersion</key>
+	<string>__VERSION__</string>
+	<key>CFBundleGetInfoString</key>
+	<string>__VERSION__</string>
+	<key>IntrospectEnabled</key>
+	<string>true</string>
+	<key>WebPluginMIMETypes</key>
+	<dict>
+		<key>application/airaudio</key>
+		<dict>
+			<key>WebPluginTypeDescription</key>
+			<string>AIR Audio Recorder browser plugin</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

@@ -1,0 +1,74 @@
+<!--
+The contents of this file are subject to the Mozilla Public
+License Version 1.1 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of
+the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS
+IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+implied. See the License for the specific language governing
+rights and limitations under the License.
+
+The Original Code is copyright (C) 2004 Jim Massey.
+The Initial Developer of the Original Code is Jim Massey
+
+Portions created by Mozdev Group, Inc. are
+Copyright (C) 2004 Mozdev Group, Inc.  All
+Rights Reserved.
+
+Original Author: Jim Massey <massey@stlouis-shopper.com>
+Contributor(s): MozdevGroup Inc.
+-->
+
+<!-- ******** navbtns Overlay definitions ******** -->
+<!-- navbtns Overlay keybindings tooltips definitions --> 
+<!ENTITY flip.btn.bind           "Or Press F4 or Alt+UP">
+<!ENTITY history.forward.bind    "Or Press F3 or ALT+LEFT">
+<!ENTITY history.back.bind       "Or Press F2 or ALT+RIGHT">
+
+<!-- keyboard bindings for navbtns Overlay -->
+<!ENTITY back.uri.id        "backuri">
+<!ENTITY back.uri.keycode   "VK_F2">
+
+<!ENTITY forward.uri.id     "forwarduri">
+<!ENTITY forward.uri.keycode "VK_F3">
+
+<!ENTITY flip.uri.id        "flipuri">
+<!ENTITY flip.uri.keycode   "VK_F4">
+<!ENTITY flip.uri.command   "testing();">
+
+<!ENTITY back.up.id         "back-up">
+<!ENTITY back.up.keycode    "VK_LEFT">
+<!ENTITY back.up.modifiers  "alt">
+<!ENTITY back.up.command    "BrowserBack();">
+
+<!ENTITY go.forward.id      "go-forward">
+<!ENTITY go.forward.keycode "VK_RIGHT">
+<!ENTITY go.forward.modifiers "alt">
+<!ENTITY go.forward.command   "BrowserForward();">
+
+<!ENTITY flip.page.id       "flip-page">
+<!ENTITY flip.page.keycode  "VK_UP">
+<!ENTITY flip.page.modifiers "alt">
+<!ENTITY flip.page.command  "testing();">
+
+<!ENTITY reload.uri.id        "reload-uri">
+<!ENTITY reload.uri.keycode   "R">
+<!ENTITY reload.uri.modifiers "VK_CONTROL">
+<!ENTITY reload.uri.command   "reload_page();">
+
+
+<!-- ********* urlbar Overlay definitions ********* -->
+<!-- urlbar Overlay keybindings tooltips definitions -->
+<!ENTITY go.btn.bind             "Or Press Return">
+<!ENTITY uri.field.bind          "Or Press Return">
+
+<!-- ********* urlList bar Overlay definitions ********* -->
+<!-- urlList bar Overlay keybindings tooltips definitions -->
+<!ENTITY go.btn.bind             "Or Press Return">
+<!ENTITY uri.field.bind          "Or Press Return">
+
+<!-- urlList bar Overlay keybindings -->
+<!ENTITY change.urilist.id       "changeuriList">
+<!ENTITY change.urilist.keycode  "VK_F1">
+<!ENTITY change.urilist.command  "uriListInputField();">

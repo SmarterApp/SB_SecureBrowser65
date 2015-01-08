@@ -1,0 +1,4 @@
+#expand <!ENTITY  brandShortName        "__MOZ_APP_NAME__">
+#expand <!ENTITY  brandFullName         "__MOZ_APP_NAME__">            
+<!ENTITY  vendorShortName       "kiosk">
+<!ENTITY  logoCopyright         " ">

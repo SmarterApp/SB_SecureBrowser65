@@ -1,0 +1,4 @@
+skin,install,url,jar:resource:/chrome/jslib.jar!//
+locale,install,url,jar:resource:/chrome/jslib.jar!//
+content,install,url,jar:resource:/chrome/jslib.jar!//
+content,install,url,resource:/chrome/jsliblive/

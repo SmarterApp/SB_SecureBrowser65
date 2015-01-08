@@ -1,0 +1,15 @@
+DEPTH		= ../..
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+include $(topsrcdir)/config/rules.mk
+
+
+ifeq ($(OS_ARCH),WINNT)
+  BIN_DLL=yak.dll
+
+libs:: 
+	cp $(srcdir)/$(BIN_DLL) $(DIST)/bin/
+endif
+

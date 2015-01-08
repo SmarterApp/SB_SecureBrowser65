@@ -1,0 +1,95 @@
+<!--
+The contents of this file are subject to the Mozilla Public
+License Version 1.1 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of
+the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS
+IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+implied. See the License for the specific language governing
+rights and limitations under the License.
+
+The Original Code is copyright (C) 2004 Jim Massey.
+The Initial Developer of the Original Code is Jim Massey
+
+Portions created by Mozdev Group, Inc. are
+Copyright (C) 2004 Mozdev Group, Inc.  All
+Rights Reserved.
+
+Original Author: Jim Massey <massey@stlouis-shopper.com>
+Contributor(s): MozdevGroup Inc.
+-->
+
+<!ENTITY window.title       "Kiosk Browser"> 
+
+<!-- Popup tooltips messages -->
+<!ENTITY HomePage           "Available Pages"> 
+<!ENTITY QuitKiosk          "Quit Kiosk">
+<!ENTITY flip.btn           "Flip between two pages">
+<!ENTITY quit.btn           "Quit this application">
+<!ENTITY base.menu          "Predefined sites">
+<!ENTITY throbber.msg       "This is the throbber element">
+<!ENTITY progress.meter     "Shows stripes when loading a uri">
+<!ENTITY menubar.grippytip   "Menubar - click to popup">
+<!ENTITY menubar.UPgrippytip "Navigation controls bar">
+
+<!-- urlbar Overlay definitions -->
+<!ENTITY go.btn             "Surf to uri entered">
+<!ENTITY go.btn.label       "Go">
+<!ENTITY uri.field          "Type a uri and press go">
+<!ENTITY default.protocol   "http://">
+
+<!-- Base uri menu Overlay definitions -->
+<!ENTITY base.menu.label    "Base Sites">
+<!ENTITY base.uri           "about:">
+
+<!ENTITY base.site1.uri     "http://www.slashdot.org/">
+<!ENTITY base.site1.txt     "Slash Dot">
+<!ENTITY base.site2.uri     "http://www.mozdev.org/">
+<!ENTITY base.site2.txt     "MozDev">
+<!ENTITY base.site3.uri     "http://www.gnu.org/">
+<!ENTITY base.site3.txt     "GNU Org">
+<!ENTITY base.site4.uri     "http://www.perl.com/">
+<!ENTITY base.site4.txt     "Perl.com">
+
+<!-- uriList Overlay menu dropdown definitions -->
+<!ENTITY uriList.tooltip    "click item to load uri">
+
+<!-- zoomOverlay definitions -->
+<!ENTITY zoom.larger     "Zoom Larger">
+<!ENTITY zoom.smaller    "Zoom Smaller">
+<!ENTITY zoom.reset      "Zoom Reset">
+<!ENTITY zoom.reset.tip  "reset to original size">
+<!ENTITY zoom.default.label "Zoom Page">
+
+<!-- forward-backbtnsOverlay -->
+<!ENTITY back.label                 "Back">
+<!ENTITY forward.label              "Forward">
+<!ENTITY history.forward.tooltip    "Go Forward in history">
+<!ENTITY history.back.tooltip       "Go backward in history">
+
+<!-- searchbtnOverlay.xul -->
+<!ENTITY search.label               "Search">
+<!ENTITY search.btn.tooltip         "Find in Page">
+
+<!-- resetbtnOverlay.xul -->
+<!ENTITY reset.label                "Logout">
+<!ENTITY reset.btn.tooltip          "Reset Session - This includes removing cookies, history, emptying the cache, and returning to the home page">
+
+<!-- homebtnOverlay.xul -->
+<!ENTITY home.label                 "Home">
+<!ENTITY home.btn.tooltip           "Go Home">
+
+<!-- reloadOverlay.xul -->
+<!ENTITY reload.label                 "Reload">
+<!ENTITY reload.btn.tooltip           "Reload page">
+
+<!-- printbtnOverlay.xul -->
+<!ENTITY print.btn.tooltip          "Print">
+
+<!-- statusbarOverlay.xul -->
+<!ENTITY default.status.tooltip          "Starting...">
+
+<!-- saveOverlay.xul -->
+<!ENTITY save.label               "Save">
+<!ENTITY save.btn.tooltip         "Save Document">
