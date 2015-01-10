@@ -4,20 +4,11 @@
 
 
 # AIR mercurial repo for src files
-HG_SB_SRC_URL = https://bugz.airast.org/kiln/Code/TDS-Student-Labs/Secure-Browser/SecureBrowserSrc
+HG_SB_SRC_URL = https://bitbucket.org/sbacoss/securebrowser65/src
 
 # set this for newer branches
 TARGET_REV=FIREFOX_10_0_12esr_RELEASE
 
-JSLIB_XPI_URL = https://www.mozdevgroup.com/dropbox/jslib/jslib_current.xpi
-JAVA_WIN32_URL = https://www.mozdevgroup.com/dropbox/air/java-6.0_29.zip
-JAVA_LINUX_URL1 = https://www.mozdevgroup.com/dropbox/air/jre-1.4.tar.bz2
-JAVA_LINUX_URL2 = https://www.mozdevgroup.com/dropbox/air/jre-1.5.tar.bz2
-JAVA_LINUX_URL3 = https://www.mozdevgroup.com/dropbox/air/jre-1.6.0_31.tar.bz2
-
-JAVA_OSX_JEP_URL = https://www.mozdevgroup.com/dropbox/air/JEP.zip
-
-MDG_REDIST_URL=https://www.mozdevgroup.com/dropbox/redist/microsoft/system
 
 OS_ARCH = $(shell uname -s)
 
@@ -34,10 +25,20 @@ checkout:: mercurial-checkout kiosk-checkout jslib-checkout java-checkout applyp
 prodCheckOut:: mercurial-checkout kiosk-checkout-prodBuild jslib-checkout applypatch mozconfig
 
 mercurial-checkout:
-	@if [ ! -d mozilla ]; then \
-	  hg clone -r $(TARGET_REV)  http://hg.mozilla.org/releases/mozilla-esr10/ mozilla/; \
-	fi
 
+if [ ! -d "mozilla" ]; then \
+	  if [ ! -d "../../mozilla" ]; then \
+	    echo "Cloning mozilla source code from mozilla.org ..."; \
+	    hg clone -r $(TARGET_REV)  http://hg.mozilla.org/releases/mozilla-release/ mozilla/; \
+	  else \
+            echo "Cloning from local mozilla source ..."; \
+	    hg clone ../../mozilla mozilla/; \
+	  fi \
+	else \
+	  echo "Mozilla source previously cloned. Reverting to checkout state..."; \
+	  cd mozilla; hg update -C; \
+	  echo "Reverting mozilla changes done.";\
+	fi
 kiosk-checkout-prodBuild: 
 	cd mozilla; cp -r ./../../src kiosk;
 	
@@ -57,39 +58,7 @@ repatch: cleanpatch applypatch
 jslib-checkout: 
 	wget --no-check-certificate -N $(JSLIB_XPI_URL) -P mozilla/kiosk/jslib;
 
-win32-dll-checkout:
-	mkdir -p mozilla/kiosk/redist/;
-	echo "Fetching redist MS dll's ...";
-	wget --no-check-certificate -N -P mozilla/kiosk/redist/ $(MDG_REDIST_URL)/msvcirt.dll;
-	wait;
-	wget --no-check-certificate -N -P mozilla/kiosk/redist/ $(MDG_REDIST_URL)/msvcp71.dll;
-	wait;
-	wget --no-check-certificate -N -P mozilla/kiosk/redist/ $(MDG_REDIST_URL)/msvcr71.dll;
-	wait;
-	wget --no-check-certificate -N -P mozilla/kiosk/redist/ $(MDG_REDIST_URL)/msvcrt.dll;
-	wait;	
 
-
-java-jep-checkout: 
-	system=`uname -s 2>/dev/null`;   \
-	if [ "$$system" == "Darwin" ]; then \
-	  wget --no-check-certificate -N $(JAVA_OSX_JEP_URL) \
-	wait; \
-	unzip -o JEP.zip -d mozilla/plugin/oji/JEP/; \
-	fi;
-
-java-checkout: 
-	system=`uname -s 2>/dev/null`;   \
-	echo $$system ;                  \
-	echo $$system | grep WIN;        \
-	if [ $$? -ne 0 ]; then           \
-	  echo $$system | grep MING;     \
-	fi;                              \
-	if [ $$? -eq 0 ]; then \
-	  wget --no-check-certificate -N $(JAVA_WIN32_URL) -P mozilla/kiosk/java; \
-	else \
-	  wget --no-check-certificate -N $(JAVA_LINUX_URL3) -P mozilla/kiosk/plugins; \
-	fi;
 
 mozconfig:
   ifeq ($(OS_ARCH),Linux)
