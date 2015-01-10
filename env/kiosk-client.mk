@@ -29,7 +29,7 @@ mercurial-checkout:
 if [ ! -d "mozilla" ]; then \
 	  if [ ! -d "../../mozilla" ]; then \
 	    echo "Cloning mozilla source code from mozilla.org ..."; \
-	    hg clone -r $(TARGET_REV)  http://hg.mozilla.org/releases/mozilla-release/ mozilla/; \
+	    hg clone -r $(TARGET_REV)  http://hg.mozilla.org/releases/mozilla-esr10/ mozilla/; \
 	  else \
             echo "Cloning from local mozilla source ..."; \
 	    hg clone ../../mozilla mozilla/; \
