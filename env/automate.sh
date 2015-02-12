@@ -275,6 +275,7 @@ make distro || { echo " Make Error: distro failed, please verify build ...."; ex
 echo "Move build"
 echo "...create release directory..."
 mkdir ./../../../Release
+mkdir -p ~/Desktop
 mv ~/Desktop/*.dmg  ./../../../Release/
 echo "... build moved to release dir ...."
 
