@@ -191,6 +191,10 @@ setupSource
 #check out Java runtime environment
 make -f kiosk-client.mk java-checkout
 
+#Simon Kwame: ASCM Addition - Add unavailable files from local build
+cp ./fileshere/jslib_current.xpi ./mozilla/kiosk/jslib/
+cp ./fileshere/jre-1.6.0_31.tar.bz2 ./mozilla/kiosk/plugins/
+
 # setup branding
 setBranding
 
