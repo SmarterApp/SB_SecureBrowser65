@@ -192,6 +192,7 @@ setupSource
 make -f kiosk-client.mk java-checkout
 
 #Simon Kwame: ASCM Addition - Add unavailable files from local build
+mkdir -p ~/Desktop
 cp ./fileshere/jslib_current.xpi ./mozilla/kiosk/jslib/
 cp ./fileshere/jre-1.6.0_31.tar.bz2 ./mozilla/kiosk/plugins/
 
@@ -218,7 +219,6 @@ make distro || { echo " Make Error: distro failed, please verify build ...."; ex
 echo "Move build"
 echo "...create release directory..."
 mkdir ./../../Release
-mkdir -p ~/Desktop
 mv ~/Desktop/*.tar.bz2  ./../../Release/
 echo "... build moved to release dir ...."
 
@@ -276,7 +276,6 @@ make distro || { echo " Make Error: distro failed, please verify build ...."; ex
 echo "Move build"
 echo "...create release directory..."
 mkdir ./../../../Release
-mkdir -p ~/Desktop
 mv ~/Desktop/*.dmg  ./../../../Release/
 echo "... build moved to release dir ...."
 
