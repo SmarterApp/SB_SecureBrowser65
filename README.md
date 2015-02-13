@@ -22,7 +22,7 @@ This version of the Secure Browser is available for the Linux platform. Each bui
 
 ### Build Process
 
-On any **Centos 5.3 - 5.11** machine:
+On any **CentOS 5.3 - 5.11** machine:
 
 #### 1. Install basic required packages
 
