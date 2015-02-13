@@ -63,3 +63,6 @@ Get a [v4 GUID](https://www.uuidgenerator.net/version4) and place into `/src/bra
 
 #### 9. Add target URL
 Obtain the URL of the TDS Student home page for the browser, uuencode it, and insert into `/src/branding/SBACSecureBrowser/pref/kiosk-branding.js` as defined within the file. The current default build will point the browser to http://browser.smarterbalanced.org/landing.
+
+#### 10. Execute the Build
+From within the env/ directory, run `/bin/bash automate.sh`
