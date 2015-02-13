@@ -1,0 +1,277 @@
+# Version: MPL 1.1/GPL 2.0/LGPL 2.1
+#
+# The contents of this file are subject to the Mozilla Public License Version
+# 1.1 (the "License"); you may not use this file except in compliance with
+# the License. You may obtain a copy of the License at
+# http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS IS" basis,
+# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+# for the specific language governing rights and limitations under the
+# License.
+#
+# The Original Code is Securebrowser.
+#
+# The Initial Developer of the Original Code is
+# Securebrowser for Securebrowser Free Software Development
+# Portions created by the Initial Developer are Copyright (C) 2009
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s): 
+#
+# Alternatively, the contents of this file may be used under the terms of
+# either the GNU General Public License Version 2 or later (the "GPL"), or
+# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+# in which case the provisions of the GPL or the LGPL are applicable instead
+# of those above. If you wish to allow use of your version of this file only
+# under the terms of either the GPL or the LGPL, and not to allow others to
+# use your version of this file under the terms of the MPL, indicate your
+# decision by deleting the provisions above and replace them with the notice
+# and other provisions required by the GPL or the LGPL. If you do not delete
+# the provisions above, a recipient may use your version of this file under
+# the terms of any one of the MPL, the GPL or the LGPL.
+#
+
+
+DEPTH=../..
+topsrcdir=@top_srcdir@
+srcdir=@srcdir@
+VPATH=@srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+MODULE           = npAIRAudio
+LIBRARY_NAME     = npAIRAudio
+MODULE_NAME      = AIRAudioRecorder 
+
+DIRS = OpusTools
+
+AR_VERSION := $(shell cat $(srcdir)/version.txt)
+AR_VERSION_COMMA := $(shell cat $(srcdir)/version.txt | sed -e's:\.:,:g')
+
+DEFINES += -DAR_VERSION=$(AR_VERSION) -DAR_VERSION_COMMA=$(AR_VERSION_COMMA)
+
+ifneq ($(OS_ARCH),WINNT)
+MOZ_OGG_OBJS = $(DEPTH)/media/libogg/src/*.o
+else
+MOZ_OGG_OBJS = $(DEPTH)/media/libogg/src/*.obj
+endif
+
+ifeq ($(OS_ARCH),Darwin)
+os_include=osx
+endif
+
+ifeq ($(OS_ARCH),Linux)
+os_include=linux
+endif
+
+ifeq ($(OS_ARCH),WINNT)
+os_include=win
+FORCE_SHARED_LIB = 1
+STL_FLAGS =
+# USE_STATIC_LIBS = 1
+NO_DIST_INSTALL = 1
+NO_INSTALL = 1
+endif
+
+LOCAL_INCLUDES = -I$(srcdir)/include/$(os_include) -I$(srcdir)/include/$(os_include)/speex -I$(srcdir)/include -I$(srcdir)/OpusTools
+
+ifeq ($(OS_ARCH),WINNT)
+
+all::
+	@$(MAKE) -C OpusTools;
+	@$(MAKE) -C ../../media/libogg/src;
+	@cp $(MOZ_OGG_OBJS) .;
+
+CPPSRCS=                     \
+  	OpusOggEnc.cpp       \
+  	OpusOggDec.cpp       \
+  	audio.cpp            \
+  	npn_gate.cpp         \
+  	npp_gate.cpp         \
+  	np_entry.cpp         \
+  	plugin.cpp           \
+	$(NULL)
+
+RCFILE    = npAIRAudio.rc
+DEFFILE   = $(srcdir)/npAIRAudio.def
+RESFILE   = npAIRAudio.res
+
+
+SHARED_LIBRARY_LIBS     +=                                                               \
+			$(srcdir)/libs/win/libboost_thread-vc80-mt-1_53.lib              \
+			$(srcdir)/libs/win/libboost_date_time-vc80-mt-1_53.lib           \
+			$(srcdir)/libs/win/libboost_system-vc80-mt-1_53.lib              \
+			$(srcdir)/libs/win/libboost_chrono-vc80-mt-1_53.lib              \
+			$(srcdir)/libs/win/libspeex.lib                                  \
+			$(srcdir)/libs/win/libspeexdsp.lib                               \
+			$(srcdir)/libs/win/celt.lib                                      \
+			$(srcdir)/libs/win/silk_common.lib                               \
+			$(srcdir)/libs/win/silk_float.lib                                \
+			$(srcdir)/libs/win/opus.lib                                      \
+			$(srcdir)/libs/win/portaudio_x86.lib                             \
+			$(srcdir)/libs/win/json_spirit_lib.lib                           \
+			OpusTools/opustools.lib                                          \
+			$(NULL)
+
+EXTRA_DSO_LDOPTS +=        \
+  -NODEFAULTLIB:LIBCMT     \
+  -IGNORE:4075             \
+  -IGNORE:4049             \
+  -IGNORE:4217             \
+  -IGNORE:4273             \
+  -IGNORE:4949             \
+  $(XPCOM_GLUE_LDOPTS)     \
+  $(NSPR_LIBS)             \
+  $(NULL)
+
+
+endif
+
+ifeq ($(OS_ARCH),Darwin)
+
+CPPSRCS =                    \
+  	OpusOggEnc.cpp       \
+  	OpusOggDec.cpp       \
+  	audio.cpp            \
+  	np_entry.cpp         \
+  	npn_gate.cpp         \
+  	npp_gate.cpp         \
+  	plugin.cpp           \
+	$(NULL)
+
+SHARED_LIBRARY_LIBS     +=                                                 \
+			OpusTools/opustools.a                              \
+			$(srcdir)/libs/osx/libboost_system.a               \
+			$(srcdir)/libs/osx/libboost_thread.a               \
+			$(srcdir)/libs/osx/libspeex.a                      \
+			$(srcdir)/libs/osx/libspeexdsp.a                   \
+			$(srcdir)/libs/osx/libopus.a                       \
+			$(srcdir)/libs/osx/libportaudio.a                  \
+			$(srcdir)/libs/osx/libjson_spirit.a                \
+			$(NULL)
+
+EXTRA_DSO_LDOPTS +=        \
+  -framework Carbon        \
+  -framework AudioUnit     \
+  -framework AudioToolbox  \
+  -framework CoreAudio     \
+  $(NULL)
+endif
+
+ifeq ($(OS_ARCH), Linux)
+LINUX_SHARED_LIBRARY_LIBS     +=                                             \
+			$(srcdir)/libs/linux/libboost_system.a               \
+			$(srcdir)/libs/linux/libboost_thread.a               \
+			$(srcdir)/libs/linux/libspeex.a                      \
+			$(srcdir)/libs/linux/libspeexdsp.a                   \
+			$(srcdir)/libs/linux/libopus.a                       \
+			$(srcdir)/libs/linux/libportaudio.a                  \
+			$(srcdir)/libs/linux/libjson_spirit.a                \
+			$(NULL)
+endif
+
+include $(topsrcdir)/config/rules.mk
+
+ifeq ($(OS_ARCH),Linux)
+LINUX_CPPSRCS=                         \
+  	$(srcdir)/OpusOggEnc.cpp       \
+  	$(srcdir)/OpusOggDec.cpp       \
+  	$(srcdir)/audio.cpp            \
+  	$(srcdir)/np_entry.cpp         \
+  	$(srcdir)/npn_gate.cpp         \
+  	$(srcdir)/npp_gate.cpp         \
+  	$(srcdir)/plugin.cpp           \
+	$(NULL)
+
+MOZ_INCLUDES = -I$(DIST)/include -DMOZILLA_CLIENT -include ../../mozilla-config.h
+
+LINUX_CXXFLAGS = -g -c -Wpointer-arith -Woverloaded-virtual -Wsynth -Wno-ctor-dtor-privacy -Wno-non-virtual-dtor -Wcast-align -Wno-invalid-offsetof -Wno-variadic-macros -pedantic -Wno-long-long -fno-strict-aliasing -fshort-wchar -pthread -ffunction-sections -fdata-sections -pipe -DNDEBUG -DTRIMMED -g -Os -freorder-blocks -finline-limit=50 -fomit-frame-pointer -fvisibility=default 
+
+EXTRA_FLAGS = -lasound -shared $(MOZ_OGG_OBJS) *.o -o 
+
+LINUX_BUILD = $(CXX) $(LINUX_CXXFLAGS) $(LOCAL_INCLUDES) $(MOZ_INCLUDES) $(DEFINES) $(LINUX_CPPSRCS) $(LINUX_SHARED_LIBRARY_LIBS) 
+
+libs::
+	$(LINUX_BUILD);
+	ar -x $(srcdir)/libs/linux/libboost_system.a;
+	ar -x $(srcdir)/libs/linux/libboost_thread.a;
+	ar -x OpusTools/opustools.a;
+	ar -x $(srcdir)/libs/linux/libspeexdsp.a;
+	ar -x $(srcdir)/libs/linux/libopus.a;
+	ar -x $(srcdir)/libs/linux/libportaudio.a;
+	ar -x $(srcdir)/libs/linux/libjson_spirit.a;
+	$(CXX) $(EXTRA_FLAGS) $(DLL_PREFIX)$(LIBRARY_NAME)$(DLL_SUFFIX)
+	@cp $(DLL_PREFIX)$(LIBRARY_NAME)$(DLL_SUFFIX) $(DIST)/bin/plugins/; 
+
+endif
+
+ifeq ($(OS_ARCH),WINNT)
+
+OBJS += $(MOZ_OGG_OBJS)
+CXXFLAGS := $(filter-out -W3, $(CXXFLAGS)) -EHsc 
+OS_LIBS += $(call EXPAND_LIBNAME, advapi32 msimg32 msvcrt)
+MOZ_OPTIMIZE=
+
+
+libs::
+	@cp $(LIBRARY_NAME)$(DLL_SUFFIX) $(DIST)/bin/plugins;
+	@cp $(srcdir)/libs/win/ms/*.dll $(DIST)/bin;
+
+endif
+
+ifeq ($(OS_ARCH),Darwin)
+EXTRA_FLAGS = -weak-lSystem -framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon -shared $(SHARED_LIBRARY_LIBS) $(MOZ_OGG_OBJS) *.o -o 
+CXXFLAGS := $(filter-out -fno-rtti -fno-exceptions -fvisibility=hidden, $(CXXFLAGS)) -fvisibility=default -mmacosx-version-min=10.5
+
+libs::
+	@cp -r $(srcdir)/AudioRecorder.plugin $(DIST)/bin/plugins;
+	@sed -e's:__VERSION__:'$(AR_VERSION)':g' $(srcdir)/AudioRecorder.plugin/Contents/Info.plist > $(DIST)/bin/plugins/AudioRecorder.plugin/Contents/Info.plist
+	$(CXX) $(EXTRA_FLAGS) $(LIBRARY_NAME)$(DLL_SUFFIX); 
+	@cp $(LIBRARY_NAME)$(DLL_SUFFIX) $(DIST)/bin/plugins/AudioRecorder.plugin/Contents/MacOS/; 
+endif
+
+clean::
+	@rm -rf *.dylib *.o *.so .deps audiorecorder* *.rc *.res *.desc;
+
+# XPI Package
+
+ifeq ($(OS_ARCH),WINNT)
+PLUGIN_NAME=audiorecorder-win-plugin.xpi
+endif
+
+ifeq ($(OS_ARCH),Darwin)
+PLUGIN_NAME=audiorecorder-mac-plugin.xpi
+endif
+
+ifeq ($(OS_ARCH),Linux)
+PLUGIN_NAME=audiorecorder-linux-plugin.xpi
+endif
+
+package:
+	@echo building XPI package for audiorecorder plugin [$(PLUGIN_NAME)];
+	@rm -rf $(DIST)/xpi;
+	@mkdir -p $(DIST)/xpi/plugins
+	@cp $(srcdir)/xpi/install.rdf $(DIST)/xpi;
+ifeq ($(OS_ARCH),Darwin)
+	@cp -r $(DIST)/universal/$(MOZ_APP_NAME)/$(MOZ_APP_NAME).app/Contents/MacOS/plugins/AudioRecorder.plugin $(DIST)/xpi/plugins;
+	@cd $(DIST)/xpi; zip -r $(DIST)/$(PLUGIN_NAME) *;
+	@du -h $(DIST)/$(PLUGIN_NAME);
+endif
+ifeq ($(OS_ARCH),WINNT)
+	@cp $(DIST)/bin/plugins/npAIRAudio.dll $(DIST)/xpi/plugins;
+	@cd $(DIST)/xpi; zip -r $(DIST)/$(PLUGIN_NAME) *;
+endif
+ifeq ($(OS_ARCH),Linux)
+	@cp $(DIST)/bin/plugins/libaudiorecorder.so $(DIST)/xpi/plugins;
+	@cd $(DIST)/xpi; zip -r $(DIST)/$(PLUGIN_NAME) *;
+	@du -h $(DIST)/$(PLUGIN_NAME);
+endif
+	@echo plugin delivered to [$(DIST)/$(PLUGIN_NAME)];
+
+pete:
+	@echo $(OBJS);
+
+version:
+	@echo $(AR_VERSION);
+

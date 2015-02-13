@@ -1,0 +1,19 @@
+. $topsrcdir/build/macosx/universal/mozconfig 
+
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../opt-handscoring-@CONFIG_GUESS@
+
+mk_add_options MOZ_CO_PROJECT=browser
+
+ac_add_options  --enable-application=kiosk
+
+ac_add_options --disable-tests
+
+# enable debug
+# ac_add_options --enable-debug
+
+export MOZ_DEBUG_SYMBOLS=1 
+export CFLAGS="-gdwarf-2"
+export CXXFLAGS="-gdwarf-2"
+
+# ac_add_options --disable-install-strip
+

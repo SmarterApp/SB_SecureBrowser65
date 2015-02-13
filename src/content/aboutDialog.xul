@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<!--
+The contents of this file are subject to the Mozilla Public
+License Version 1.1 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of
+the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS
+IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+implied. See the License for the specific language governing
+rights and limitations under the License.
+
+The Original Code is copyright (C) 2004 Mozdev Group, Inc.
+The Initial Developer of the Original Code is Mozdev Group, Inc.
+
+Original Author: MozdevGroup Inc.
+Contributor(s): 
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://bmakiosk/skin/aboutDialog.css" type="text/css"?>
+
+<!DOCTYPE dialog [
+  <!ENTITY % aboutDialogDTD SYSTEM "chrome://bmakiosk/locale/aboutDialog.dtd">
+  %aboutDialogDTD;
+]>
+
+<dialog title="&about.bma.label; &about.dialog.title;" 
+        id="aboutDialog"
+        windowtype="openkiosk:browser"
+        onload="onloadAbout();"
+        buttons="accept"
+        xmlns:html="http://www.w3.org/199/xhtml"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        style="width: 399px">
+
+  <script type="application/x-javascript" src="chrome://jslib/content/jslib.js"/>
+  <script type="application/x-javascript" src="chrome://bmakiosk/content/js/aboutDialog.js" />
+
+  <stringbundle id="bundle_bmakiosk" src="chrome://bmakiosk/locale/bmakiosk.properties"/>
+
+  <vbox id="mainbox">
+
+    <separator/>
+
+    <vbox align="center" style="padding-bottom: 20px;">
+      <vbox>
+#expand        <label id="kioskVersionNum" value="&about.version.label; __MOZ_APP_VERSION__"/>
+#expand        <label id="ffVersionNum" value="Firefox __FIREFOX_VERSION__"/>
+        <label id="kioskUserAgent" value="" />
+      </vbox>
+    </vbox>
+
+    <separator class="groove" />
+    <separator />
+    <hbox>
+      <label value="&about.license.label;" />
+      <label class="linklabel" value="Mozilla Public License" url="http://www.mozilla.org/MPL/MPL-1.1.html"
+             onclick="goLink(event);" />
+    </hbox>
+
+  </vbox>
+
+  <separator/>
+  
+</dialog>

@@ -1,0 +1,5 @@
+<!ENTITY bmakiosk.overlaymenu.label     "Kiosk">
+<!ENTITY bmakiosk.view.name             "Launch">
+<!ENTITY bmakiosk.uninstall.label       "Uninstall">
+<!ENTITY bmakiosk.about.label           "About">
+<!ENTITY bmakiosk.admin.label           "Admin">

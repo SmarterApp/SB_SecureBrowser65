@@ -1,0 +1,182 @@
+const G_VER             = "__VERSION__";
+const G_MSG             = "kiosk v"+G_VER;
+const G_NAME            = "kiosk";
+const G_CHROME          = "Chrome";
+const G_USER            = "Current User";
+const G_CONTENT         = "content/";
+const G_SKIN            = "skin/";
+const G_LOCALE          = "locale/en-US/";
+
+const G_JAR_FILE        = "kiosk.jar";
+const G_CHROME_DIR      = getFolder(G_CHROME);
+const G_USER_CHROME_DIR = getFolder(G_USER, "chrome");
+const G_PROGRAM_DIR     = getFolder("Program");
+
+const COMNT_1           = "Global Chrome Install for kiosk as a jar . . . \n\n";
+const COMNT_2           = "kiosk jar";
+const KILO_BYTES        = 1240; // Extracted xpi archive size - 1.2M
+const UP_TO_DATE        = "kiosk v,"+G_VER+" [UP TO DATE] - no installation needed"
+
+const CONFIRM_MSG       =   "kiosk has failed to install globally on your system. "
+                          + "This is most likely due to you not having the required "
+                          + "system permissions to do so.\n\n"
+                          + "Would you like to install kiosk in your "
+                          + "browser user profile directory instead?\n\n"
+                          + "This means that only the current profile "
+                          + "will be able to use kiosk.\n\n"
+                          + "If you wish to have a global install of kiosk, you can cancel "
+                          + "the install here and login as system administrator and retry "
+                          + "the install from there. ";
+
+logComment(COMNT_1);
+
+var rv = initInstall(G_MSG, G_NAME, G_VER);
+log("Init Install", rv);
+
+if (verifyDiskSpace(G_PROGRAM_DIR, KILO_BYTES))
+{
+  var globalJar = getFolder(G_CHROME_DIR, G_JAR_FILE);
+  var userJar = getFolder(G_USER_CHROME_DIR, G_JAR_FILE);
+
+  rv = addDirectory("RDF Caching", "components", getFolder("Components"), "" );
+
+	if (rv == ACCESS_DENIED) {
+	  alert("Unable to write to components directory "+getFolder("Components")+".\n You will need to restart the browser with administrator/root privileges to preperly install kiosk. After installing as root (or administrator), you will need to restart the browser one more time, to register kiosk.\n After the second restart, you can go back to running the browser without privileges!");
+
+    cancelInstall(ACCESS_DENIED);
+	} else if (rv != SUCCESS) {
+	  cancelInstall(rv);
+	} else {
+	  if (File.exists(globalJar))
+      upgradeGlobal();
+    else if (File.exists(userJar))
+      upgradeUser();
+    else if (addGlobal() != SUCCESS)
+      addUser();
+
+    rv = getLastError();
+
+    if (rv==SUCCESS)
+      performInstall();
+    else
+      cancelInstall(rv);
+  }
+} else {
+  cancelInstall(INSUFFICIENT_DISK_SPACE);
+}
+
+// local functions
+function log (aMsg, aRes) 
+{ 
+  var rv = aRes;
+  if (rv == 0)
+    rv = "[SUCCESS]";
+    
+  logComment(aMsg+": "+rv); 
+}
+
+// this function verifies disk space in kilobytes
+function verifyDiskSpace(aDirPath, aSpaceRequired)
+{
+  var spaceAvailable;
+  var rv = true;
+
+  // Get the available disk space on the given path
+  spaceAvailable = fileGetDiskSpaceAvailable(aDirPath);
+
+  // Convert the available disk space into kilobytes
+  spaceAvailable = parseInt(spaceAvailable / 1024);
+
+  // do the verification
+  if (spaceAvailable < aSpaceRequired) {
+    logComment("Insufficient disk space: " + aDirPath);
+    logComment("  required : " + spaceRequired + " K");
+    logComment("  available: " + spaceAvailable + " K");
+    rv = false;
+  }
+
+  return rv;
+}
+
+function checkVersion ()
+{
+  return true;
+  var ver = new String(InstallTrigger.getVersion(G_NAME));
+
+  // strip off build info
+  ver = ver.substring(0, ver.lastIndexOf("."));
+
+  return (G_VER >= ver);
+}
+
+function upgradeGlobal ()
+{
+  if (checkVersion())
+    addGlobal();
+  else
+    logComment(UP_TO_DATE);
+}
+
+function upgradeUser ()
+{
+  if (checkVersion())
+    addUser();
+  else
+    logComment(UP_TO_DATE);
+}
+
+function addGlobal ()
+{
+  var rv = addDirectory(COMNT_2, "chrome",  G_CHROME_DIR, "");
+  log("addDirectory chrome", rv);
+
+  if (rv == 0) {
+    // register chrome in global chrome
+    var jarFile = getFolder(G_CHROME_DIR, G_JAR_FILE);
+
+    rv = registerChrome(CONTENT|DELAYED_CHROME, jarFile, G_CONTENT);
+    log("register content", rv);
+
+    rv = registerChrome(SKIN|DELAYED_CHROME, jarFile, G_SKIN);
+    log("register skin", rv);
+
+    rv = registerChrome(LOCALE|DELAYED_CHROME, jarFile, G_LOCALE);
+    log("register locale: ", rv);
+
+  }
+
+  return rv;
+}
+
+function addUser ()
+{
+  // cancel previous install attempt
+  cancelInstall(ACCESS_DENIED);
+
+  var rv;
+  if (confirm(CONFIRM_MSG)) {
+    // reinitialize the install
+    rv = initInstall(G_MSG, G_NAME, G_VER);
+    log("initInstall reinitialized", rv);
+
+    rv = addDirectory(COMNT_2, "chrome",  G_USER_CHROME_DIR, "");
+    log("addFile", rv);
+
+    if (rv == 0) {
+      var jarFile = getFolder(G_USER_CHROME_DIR, G_JAR_FILE);
+
+      // register chrome in user home
+      rv = registerChrome(CONTENT|PROFILE_CHROME, jarFile, G_CONTENT);
+      log("content", rv);
+      rv = registerChrome(SKIN|PROFILE_CHROME, jarFile,  G_SKIN);
+      log("skin", rv);
+      rv = registerChrome(LOCALE|PROFILE_CHROME, jarFile, G_LOCALE);
+      log("locale", rv);
+
+    }
+  } else {
+    rv = USER_CANCELLED;
+  }
+
+  return rv;
+}

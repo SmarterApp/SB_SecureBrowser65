@@ -1,0 +1,15 @@
+#aboutDialog {
+  background-color: #FFFFFF;
+  width: 43em;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 20px;
+}
+
+.linklabel {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#kioskVersionNum { font-weight: bold; }

@@ -1,0 +1,4 @@
+jslib.jar:
+%  content jslib % contentaccessible=yes
+%  skin    jslib classic/1.0 %skin/ 
+%  locale  jslib en-US %locale/en-US/

@@ -1,0 +1,12 @@
+# Here is a sample AUP exempt list file
+# This is a comment
+# STRICT - only an exact URL match is exempt, though it is tolerant of trailing slashes
+# brooklynmuseum.org = www.brooklynmuseum.org
+# ALL - all pages from a specified path will not need AUP acceptance
+#     - The * wildcard will do a domain match, but only with the ALL filter
+
+# Some sample entries:
+allowed[*.slashdot.org, ALL];
+allowed[www.mozdevgroup.com, ALL];
+allowed[www.brooklynmuseum.org/departments/libraries/, STRICT];
+allowed[*.mozilla.org, ALL];

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://branding/locale/brand.dtd">
+
+
+<window id="kioskHiddenWindow" 
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+</window>

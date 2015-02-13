@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+The contents of this file are subject to the Mozilla Public
+License Version 1.1 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of
+the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS
+IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+implied. See the License for the specific language governing
+rights and limitations under the License.
+
+The Original Code is copyright (C) 2004 Jim Massey.
+The Initial Developer of the Original Code is Jim Massey
+
+Portions created by Mozdev Group, Inc. are
+Copyright (C) 2004 Mozdev Group, Inc.  All
+Rights Reserved.
+
+Original Author: Brian King <brian@mozdevgroup.com>
+Contributor(s): MozdevGroup Inc.
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?> 
+
+<dialog id="warningDialog"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
+        onload="warningOnLoad();"
+        buttons="accept"
+        ondialogaccept="return onAccept();"
+        buttonpack="center"
+        style="min-width: 29em; min-height: 8.5em; -moz-user-focus: ignore;"> 
+    
+  <script type="application/x-javascript" 
+          src="chrome://bmakiosk/content/js/resetWarning.js"/>
+
+  <stringbundleset id="bmakioskBundles">
+    <stringbundle id="bundle_bmakiosk" 
+                  src="chrome://bmakiosk/locale/bmakiosk.properties"/>
+  </stringbundleset>
+
+  <hbox flex="1">
+    <hbox align="start">
+      <image id="alertimage" class="spaced alert-icon"/>
+    </hbox>
+    
+    <vbox flex="1" style="max-width: 45em;">
+      <!-- text -->
+      <description id="warningheader" class="header"/>
+      <vbox id="messageBox">
+         <description id="message1"/>
+         <description id="message2">
+           Press 'Continue' to keep the current session.
+         </description>
+      </vbox>
+
+    </vbox>
+  </hbox>
+
+  <separator class="thin"/>
+  
+</dialog>

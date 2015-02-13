@@ -1,0 +1,13 @@
+There are two scrollbar states in the Kiosk, normal and wide.
+Normal state is the default. To make the scrollbars wide, you have to activate 
+a new theme in the Firefox browser.
+
+1) Close down the Kiosk.
+2) Open Firefox browser.
+3) Install the BMA Kiosk Firefox Theme (wide scrollbars) 
+4) Restart Browser
+5) Go to Tools->Add-ons->Themes and select BMA Theme
+4) Shutdown all windows and restart for it to take effect.
+
+The theme is essentially a clone of the Firefox Classic theme. 
+

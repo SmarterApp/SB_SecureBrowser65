@@ -1,0 +1,11 @@
+<!ENTITY about.dialog.title       "Secure Browser">
+
+<!ENTITY about.version.label      "Secure Browser - Version number:">
+<!ENTITY about.author.label       "This application was developed by Mozdev Group, Inc. for the Brooklyn Museum.  More information about the project can be found here:">
+<!ENTITY about.bma.label          "">
+<!ENTITY about.mdg.label          "MozDev Group Inc.">
+<!ENTITY about.license.label      "Licensed under the">
+
+<!ENTITY about.copyright.label1   "Copyright &#169; 2004">
+<!ENTITY about.copyright.label2   "and MozDev Group Inc.">
+<!ENTITY about.copyright.label3   "All Rights Reserved">

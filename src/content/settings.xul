@@ -1,0 +1,395 @@
+<?xml version="1.0"?>
+
+<!--
+The contents of this file are subject to the Mozilla Public
+License Version 1.1 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of
+the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS
+IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+implied. See the License for the specific language governing
+rights and limitations under the License.
+
+The Original Code is copyright (C) 2004 Jim Massey.
+The Initial Developer of the Original Code is Jim Massey
+
+Portions created by Mozdev Group, Inc. are
+Copyright (C) 2004 Mozdev Group, Inc.  All
+Rights Reserved.
+
+Original Author: Brian King <brian@mozdevgroup.com>
+Contributor(s): MozdevGroup Inc.
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://bmakiosk/skin/aboutDialog.css" type="text/css"?>
+
+<!DOCTYPE window [
+<!ENTITY % settingsDTD SYSTEM "chrome://bmakiosk/locale/settings.dtd">
+%settingsDTD;
+]>
+
+<window title="&app.name; &window.title;"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        class="dialog"
+        windowtype="bmaKiosk:Settings"
+        onblur="focus();"
+        onload="onLoad();">
+
+  <preferences>
+    <preference id="prefButtons"   
+                name="bmakiosk.toolbar.currentset"    
+                type="string" instantApply="true" />
+    <preference id="prefStatusbar" 
+                name="bmakiosk.statusbar"             
+                type="bool" instantApply="true" />
+    <preference id="prefSession"   
+                name="sessionstore.resume_from_crash" 
+                type="bool"  instantApply="true" />
+  </preferences>
+
+  <script type="application/x-javascript" src="chrome://jslib/content/jslib.js" />
+  <script type="application/x-javascript" src="chrome://bmakiosk/content/js/utils.js" />
+  <script type="application/x-javascript" src="chrome://bmakiosk/content/js/settings.js" />
+
+  <stringbundleset id="settingsBundles">
+    <stringbundle id="settingsDefaults" src="chrome://bmakiosk/locale/settings.properties"/>
+    <stringbundle id="bmakioskDefaults" src="chrome://bmakiosk/locale/bmakioskDefault.properties"/>
+    <stringbundle id="brandBundle" src="chrome://bmakiosk/locale/brand.properties"/>
+  </stringbundleset>
+
+  <keyset id="settingsKeys">
+    <key keycode="VK_ENTER" oncommand=""/>
+    <key keycode="VK_RETURN" oncommand=""/>
+    <key keycode="VK_ESCAPE" oncommand="close();"/>
+  </keyset>
+
+  <tabbox id="tabbox" flex="1">
+    <tabs orient="horizontal">
+      <tab id="browserTab"    label="&browser.tab.label;"             accesskey="" persist="selected" />
+      <tab id="filterTab"     label="&filters.tab.label;"             accesskey="" persist="selected" />
+      <tab id="sessionTab"    label="&sessions.tab.label;"            accesskey="" persist="selected" />
+      <tab id="customizeTab"  label="&customize.tab.label;"           accesskey="" persist="selected" />
+      <tab id="adminTab"      label="&admin.tab.label;"               accesskey="" persist="selected" />
+    </tabs>
+    <tabpanels id="tabpanels" flex="1">
+
+      <vbox id="browserBox">
+        <!-- Homepage specification -->
+        <groupbox>
+          <caption label="&homepagebox.caption;"/>
+          <vbox flex="1">
+            <label value="&abouthomepage.label;"/>
+            <hbox align="center">
+              <label value="&location.label;" accesskey="" control="kioskStartupHomepage"/>
+              <textbox id="kioskStartupHomepage" flex="1" class="uri-element"
+                       maxrows="6"
+                       oninput="homepageInputHandler();"/>
+            </hbox>
+            <hbox align="center" pack="end">
+              <button label="&defaultbtn.label;" accesskey=""
+                      oncommand="setHomePageToDefaultPage();"
+                      id="browserUseDefault"/>
+            </hbox>
+          </vbox>
+        </groupbox>
+
+        <!-- Attract Screen -->
+        <groupbox>
+          <caption label="&attractbox.caption;"/>
+          <checkbox id="attractEnabled" label="&attractenable.label;" 
+                    oncommand="toggleAttract(this)"/>
+          <description width="1">&aboutattract.label;</description>
+          <hbox align="center">
+            <label value="&location.label;" accesskey="" control="kioskAttractHomepage"/>
+            <textbox id="kioskAttractHomepage" flex="1" class="uri-element" maxrows="6"/>
+          </hbox>
+        </groupbox>
+
+        <!-- Redirect Screen -->
+        <groupbox>
+          <caption label="&redirectbox.caption;"/>
+          <checkbox id="redirectEnabled" label="&redirectenable.label;" 
+                    oncommand="toggleRedirectPage(this)"/>
+          <description width="1">&redirect.label;</description>
+          <hbox align="center">
+            <label value="&location.label;" accesskey="" control="kioskRedirectHomepage"/>
+            <textbox id="kioskRedirectPage" flex="1" class="uri-element" maxrows="6"/>
+          </hbox>
+        </groupbox>
+
+        <!-- Default Mozilla browser -->
+        <groupbox hidden="true">
+          <caption label="&browser.caption;"/>
+          <description  width="1">&aboutbrowser.label;</description>
+          <checkbox id="defaultBrowser" label="&checkbrowser.label;" oncommand="" disabled="true" />
+
+          <hbox align="center">
+            <label value="&mode.label;"/>
+            <radiogroup id="kioskmoderadio" orient="horizontal">
+              <radio id="mode.full" label="&modefull.label;" value="full"/>
+              <radio id="mode.title" label="&modetitle.label;" value="title"/>
+            </radiogroup>
+          </hbox>
+        </groupbox>
+
+      </vbox>
+
+      <vbox id="filterBox">
+        <!-- Filter filepicker -->
+        <groupbox>
+          <caption label="&filterbox.caption;"/>
+          <checkbox id="filtersEnabled" label="&filterenable.label;" oncommand="// toggleFilters(this)"/>
+          <separator />
+          <description  class="indent" width="1">&aboutfilter.label;</description>
+          <separator />
+          <hbox lass="indent" align="center">
+            <textbox id="allowed.file" datatype="nsILocalFile" flex="1" name="allowed.file"
+                     class="uri-element"/>
+            <button class="push" name="allowed.file" label="&chooseBtn.label;"
+                    accesskey=""
+                    oncommand="selectFilterFile(this)"
+                    id="allowed.button"/>
+          </hbox>
+          <textbox id="filter.edit" multiline="true" cols="20" rows="20" oninput="onEditChangeButtonLabel();" />
+          <label value="Changes require restart - Ctrl+Shift+F8" />
+          <separator />
+          <description  lass="indent" width="1">&jsallenable.desc;</description>
+          <checkbox lass="indent" id="jsallEnabled" label="&jsallenable.label;" oncommand=""/>
+        </groupbox>
+
+        <groupbox>
+          <caption label="&networkfilters.caption;"/>
+          <checkbox id="fileProtoEnabled" label="&fileProto.label;" />
+          <checkbox id="ftpProtoEnabled" label="&ftpProto.label;" />
+          <checkbox id="aboutProtoEnabled" label="&aboutProto.label;" />
+        </groupbox>
+      </vbox>
+
+      <vbox id="sessionBox">
+        <!-- Reset timer and message countdown -->
+        <groupbox id="session-reset-gb">
+          <caption label="&reset.caption;"/>
+            <checkbox id="enable-session-reset" label="&inactive.label;" 
+                      oncommand="toggleSessionBox(this);" />
+          <hbox align="center" class="indent">
+            <label value="Reset the kiosk session after" accesskey="" control="resetInterval" observes="session-reset-gb" />
+            <textbox id="resetInterval" size="3" observes="session-reset-gb" />
+            <label value="minute(s) of inactivity" observes="session-reset-gb" />
+          </hbox>
+          <checkbox id="warningEnabled" label="Enable Warning" 
+                    oncommand="toggleSecondsTextbox(this)" />
+          <hbox align="center" class="indent">
+            <label value="Show reset warning with countdown for" accesskey="" control="warningSeconds" />
+            <textbox id="warningSeconds" size="3" />
+            <label value="seconds" />
+          </hbox>
+        </groupbox>
+
+        <!-- Disk Cache -->
+        <groupbox>
+          <caption label="&cache.caption;"/>
+          <checkbox id="cacheEnabled" label="&cacheenable.label;" />
+          <description>&aboutcache.label;</description>
+          <checkbox id="memcacheEnabled" label="&cachememenable.label;" />
+          <description>&aboutmemcache.label;</description>
+          <checkbox id="cookiesEnabled" label="&cookiesenable.label;" />
+          <description>&aboutcookies.label;</description>
+        </groupbox>
+
+        <!-- AUP -->
+        <groupbox>
+          <caption label="&aup.caption;"/>
+          <checkbox id="aupEnabled" label="&aupenable.label;" 
+                    oncommand="toggleAUPFilter()" />
+          <description  width="1">&aboutaup.label;</description>
+          <label value="&aupfile.label;" for="aup.file" />
+          <hbox align="center">
+            <textbox id="aup.file" datatype="nsILocalFile" flex="1" name="aup.file"
+                     class="uri-element"/>
+            <button class="push" name="aup.file" label="&chooseBtn.label;"
+                    accesskey=""
+                    oncommand="selectFilterFileAll(this)"
+                    id="aupfile.button"/>
+          </hbox>
+          <label value="&aupexempt.label;" for="aup.exempt" />
+          <hbox align="center">
+            <textbox id="aup.exempt" datatype="nsILocalFile" flex="1" name="aup.exempt"
+                     class="uri-element"/>
+            <button class="push" name="aup.exempt" label="&chooseBtn.label;"
+                    accesskey=""
+                    oncommand="selectFilterFile(this)"
+                    id="aupexempt.button"/>
+          </hbox>
+          <vbox align="right">
+            <label class="linklabel" value="&samplelink.label;"
+                   href="chrome://bmakiosk/content/aup-exempt-sample.txt" name="&aupsamplelink.title;"
+                   onclick="goSampleFilters(event);" />
+          </vbox>
+        </groupbox>
+      </vbox>
+
+      <vbox id="customizeBox">
+        <!-- UI customisation -->
+        <!-- Tabs -->
+        <groupbox>
+          <caption label="&tabsbox.caption;"/>
+          <description  width="1">&abouttabs.label;</description>
+          <checkbox id="tabsEnabled" label="&tabsenable.label;" 
+                    oncommand="setEnableTabbedBrowsing(this);" />
+        </groupbox>
+
+        <groupbox>
+          <caption label="&customizebox.caption;"/>
+
+          <hbox align="center">
+            <label value="&uiwidgets.label;"/>
+            <radiogroup id="showuiradio" orient="horizontal" oncommand="toggleUIList((this.selectedItem.value == 'show'))">
+              <radio id="ui.show" label="&uiwidgetsshow.label;" value="show"/>
+              <radio id="ui.hide" label="&uiwidgetshide.label;" value="hide"/>
+            </radiogroup>
+          </hbox>
+
+          <deck id="customiseDeck" selectedIndex="0">
+            <listbox id="bmaOverlaysList" seltype="single" flex="1" style="max-height: 80px;"/>
+            <vbox>
+              <description width="1">&hideuimessage.label;</description>
+            </vbox>
+          </deck>
+        </groupbox>
+
+        <groupbox>
+          <caption label="&save.caption;"/>
+          <vbox id="" flex="1">
+            <hbox align="center">
+              <label value="&savebtn.label;" accesskey="" control="saveText"/>
+              <textbox id="save.txt" flex="1" />
+            </hbox>
+            <checkbox id="save.filepicker" label="&savefp.label;" oncommand="toggleSavePath(this)"/>
+            <label value="&saveloc.label;" for="save.location" />
+            <hbox align="center">
+              <textbox id="save.location" datatype="nsILocalFile" flex="1" name="save.location"
+                       class="uri-element"/>
+              <button class="push" name="save.location" label="&chooseBtn.label;"
+                      accesskey=""
+                      oncommand="selectSaveDirectory(this)"
+                      id="saveloc.button"/>
+            </hbox>
+          </vbox>
+        </groupbox>
+        <groupbox>
+          <caption label="&reset.caption;"/>
+          <vbox id="" flex="1">
+            <hbox align="center">
+              <label value="&resetbtn.label;" accesskey="" control="reset.txt" />
+              <textbox id="reset.txt" flex="1" />
+            </hbox>
+          </vbox>
+        </groupbox>
+
+        <groupbox>
+          <caption label="&useragent.caption;"/>
+          <vbox id="" flex="1">
+            <hbox align="center">
+              <textbox id="useragent.txt" flex="1" /> <button label="&reset.label;" oncommand="resetUserAgent();" />
+            </hbox>
+          </vbox>
+        </groupbox>
+      </vbox>
+
+      <vbox id="adminBox">
+        <!-- Password, etc. -->
+        <groupbox id="passwordBox">
+          <caption label="&passwordbox.caption;"/>
+          <hbox id="readwhereBox" align="center">
+#ifdef XP_WIN
+            <label value="&readwhere.label;"/>
+            <radiogroup id="readpwdradio" orient="horizontal" oncommand="togglePasswordLocation()">
+#else
+            <radiogroup id="readpwdradio" orient="horizontal" oncommand="togglePasswordLocation()" collapsed="true">
+#endif
+              <radio id="pwd.reg" label="&fromregistry.label;" value="reg"/>
+              <radio id="pwd.prefs" label="&fromprefs.label;" value="prefs" />
+            </radiogroup>
+          </hbox>
+
+          <vbox id="readwhereEntry" flex="1">
+            <description width="1">
+              &aboutpassword.label;
+            </description>
+            <hbox align="center">
+              <label value="&password.label;" accesskey="" control="newPassword"/>
+              <textbox id="newPassword" flex="1" type="password"
+                       oninput=""/>
+            </hbox>
+          </vbox>
+        </groupbox>
+
+        <!-- Print -->
+        <groupbox id="printGroupBox">
+          <caption label="&printbox.caption;"/>
+          <vbox id="printDescription" flex="1">
+            <description width="1">
+              &aboutprint.label;
+            </description>
+          </vbox>
+          <hbox id="printSettingsBox" align="center">
+            <label value="&printSettings.label;"/>
+            <radiogroup id="printSettingsradio" orient="horizontal">
+              <radio id="print.silent" label="&print.silent.label;" value="silent" />
+              <radio id="print.dialog" label="&print.dialog.label;" value="dialog" />
+            </radiogroup>
+          </hbox>
+          <checkbox id="enable.print.page" label="Allow web page printing" />
+        </groupbox>
+
+        <groupbox id="keyboardShortCuts">
+          <caption label="Keyboard Shortcuts"/>
+          <grid>
+            <columns>
+              <column flex="1"/>
+              <column flex="1"/>
+            </columns>
+            <rows>
+              <row><label value="Settings Dialog:" /> <label value="Ctrl+Shift+F1" /></row>
+              <row><label value="Connections/Proxy:" /> <label value="Ctrl+Shift+F3" /></row>
+              <row><label value="Restart:" /> <label value="Ctrl+Shift+F8" /></row>
+              <row><label value="Javascript Console:" /> <label value="Ctrl+Shift+F9" /></row>
+              <row><label value="Quit:" /> <label value="Ctrl+Shift+F10" /></row>
+              <row><label value="Add-Ons:" /> <label value="Ctrl+Shift+F11" /></row>
+              <row><label value="About:" /> <label value="Ctrl+Shift+F12" /></row>
+            </rows>
+          </grid>
+        </groupbox>
+
+        <groupbox id="add-ons">
+          <caption label="Add-Ons"/>
+          <description value="Choose whether to allow add-ons to be installed." />
+          <checkbox id="enable.addons" label="Enabled" />
+        </groupbox>
+
+        <groupbox id="file-upload">
+          <caption label="File Upload"/>
+          <description value="Choose whether to enable file upload form controls on web pages." />
+          <checkbox id="enable.fileupload" label="Enabled" />
+        </groupbox>
+
+        <groupbox id="language">
+          <caption label="Language"/>
+          <button label="Language" oncommand="launchLanguageDialog();" />
+          <button label="Character Encoding" oncommand="launchCharset();" />
+        </groupbox>
+      </vbox>
+    </tabpanels>
+  </tabbox>
+
+  <!-- buttons -->
+  <hbox class="dialog-button-box" pack="end">
+    <button dlgtype="extra2" class="dialog-button" label="&restoreBtn.label;" oncommand="onRestore()"
+            tooltiptext="&restoreBtn.tooltip;" collapsed="true" />
+    <spacer flex="1"/>
+    <button dlgtype="accept" class="dialog-button" label="&okBtn.label;" oncommand="onAccept()"/>
+    <button dlgtype="cancel" class="dialog-button" label="&cancelBtn.label;" oncommand="goQuitApp()"/>
+  </hbox>
+</window>

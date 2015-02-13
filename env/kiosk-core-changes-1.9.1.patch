@@ -1,0 +1,1344 @@
+diff -r 4a19f1338175 allmakefiles.sh
+--- a/allmakefiles.sh	Mon Mar 15 12:34:17 2010 -0400
++++ b/allmakefiles.sh	Mon Mar 29 11:05:34 2010 -0600
+@@ -106,7 +106,6 @@
+ if test -n "$MOZ_BRANDING_DIRECTORY"; then
+   add_makefiles "
+     $MOZ_BRANDING_DIRECTORY/Makefile
+-    $MOZ_BRANDING_DIRECTORY/content/Makefile
+     $MOZ_BRANDING_DIRECTORY/locales/Makefile
+   "
+ fi
+diff -r 4a19f1338175 browser/Makefile.in
+--- a/browser/Makefile.in	Mon Mar 15 12:34:17 2010 -0400
++++ b/browser/Makefile.in	Mon Mar 29 11:05:34 2010 -0600
+@@ -42,7 +42,7 @@
+ 
+ include $(topsrcdir)/config/config.mk
+ 
+-DIRS = base components locales themes fuel app
++DIRS = base components locales themes fuel # app
+ 
+ ifeq ($(OS_ARCH),WINNT)
+ ifdef MOZ_INSTALLER
+diff -r 4a19f1338175 browser/app/application.ini
+--- a/browser/app/application.ini	Mon Mar 15 12:34:17 2010 -0400
++++ b/browser/app/application.ini	Mon Mar 29 11:05:34 2010 -0600
+@@ -45,7 +45,7 @@
+ SourceRepository=@MOZ_SOURCE_REPO@
+ #endif
+ #ifdef MOZ_SOURCE_STAMP
+-SourceStamp=@MOZ_SOURCE_STAMP@
++SourceStamp=ad80351ed9da
+ #endif
+ Copyright=Copyright (c) 1998 - 2010 mozilla.org
+ ID={ec8030f7-c20a-464f-9b0e-13a3a9e97384}
+diff -r 4a19f1338175 browser/components/migration/src/nsProfileMigrator.cpp
+--- a/browser/components/migration/src/nsProfileMigrator.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/browser/components/migration/src/nsProfileMigrator.cpp	Mon Mar 29 11:05:34 2010 -0600
+@@ -90,6 +90,9 @@
+ NS_IMETHODIMP
+ nsProfileMigrator::Migrate(nsIProfileStartup* aStartup)
+ {
++  // KIOSK no migration
++  return NS_OK;
++
+   nsresult rv;
+ 
+   nsCAutoString key;
+diff -r 4a19f1338175 browser/locales/en-US/chrome/overrides/appstrings.properties
+--- a/browser/locales/en-US/chrome/overrides/appstrings.properties	Mon Mar 15 12:34:17 2010 -0400
++++ b/browser/locales/en-US/chrome/overrides/appstrings.properties	Mon Mar 29 11:05:34 2010 -0600
+@@ -35,23 +35,23 @@
+ # ***** END LICENSE BLOCK *****
+ 
+ malformedURI=The URL is not valid and cannot be loaded.
+-fileNotFound=Firefox can't find the file at %S.
+-dnsNotFound=Firefox can't find the server at %S.
+-protocolNotFound=Firefox doesn't know how to open this address, because the protocol (%S) isn't associated with any program.
+-connectionFailure=Firefox can't establish a connection to the server at %S.
++fileNotFound=Secure Browser can't find the file at %S.
++dnsNotFound=Secure Browser can't find the server at %S.
++protocolNotFound=Secure Browser doesn't know how to open this address, because the protocol (%S) isn't associated with any program.
++connectionFailure=Secure Browser can't establish a connection to the server at %S.
+ netInterrupt=The connection to %S was interrupted while the page was loading.
+ netTimeout=The server at %S is taking too long to respond.
+-redirectLoop=Firefox has detected that the server is redirecting the request for this address in a way that will never complete.
++redirectLoop=Secure Browser has detected that the server is redirecting the request for this address in a way that will never complete.
+ ## LOCALIZATION NOTE (confirmRepostPrompt): In this item, don't translate "%S"
+ confirmRepostPrompt=To display this page, %S must send information that will repeat any action (such as a search or order confirmation) that was performed earlier.
+ resendButton.label=Resend
+-unknownSocketType=Firefox doesn't know how to communicate with the server.
++unknownSocketType=Secure Browser doesn't know how to communicate with the server.
+ netReset=The connection to the server was reset while the page was loading.
+-netOffline=Firefox is currently in offline mode and can't browse the Web.
++netOffline=Secure Browser is currently in offline mode and can't browse the Web.
+ isprinting=The document cannot change while Printing or in Print Preview.
+-deniedPortAccess=This address uses a network port which is normally used for purposes other than Web browsing. Firefox has canceled the request for your protection.
+-proxyResolveFailure=Firefox is configured to use a proxy server that can't be found.
+-proxyConnectFailure=Firefox is configured to use a proxy server that is refusing connections.
++deniedPortAccess=This address uses a network port which is normally used for purposes other than Web browsing. Secure Browser has canceled the request for your protection.
++proxyResolveFailure=Secure Browser is configured to use a proxy server that can't be found.
++proxyConnectFailure=Secure Browser is configured to use a proxy server that is refusing connections.
+ contentEncodingError=The page you are trying to view cannot be shown because it uses an invalid or unsupported form of compression.
+ unsafeContentType=The page you are trying to view cannot be shown because it is contained in a file type that may not be safe to open. Please contact the website owners to inform them of this problem.
+ externalProtocolTitle=External Protocol Request
+diff -r 4a19f1338175 browser/locales/en-US/installer/mui.properties
+--- a/browser/locales/en-US/installer/mui.properties	Mon Mar 15 12:34:17 2010 -0400
++++ b/browser/locales/en-US/installer/mui.properties	Mon Mar 29 11:05:34 2010 -0600
+@@ -87,7 +87,7 @@
+ MUI_UNTEXT_FINISH_SUBTITLE=Uninstall was completed successfully.
+ MUI_UNTEXT_ABORT_TITLE=Uninstallation Aborted
+ MUI_UNTEXT_ABORT_SUBTITLE=Uninstall was not completed successfully.
+-MUI_UNTEXT_FINISH_INFO_TITLE=Completing the $BrandFullNameDA Uninstall Wizard
++MUI_UNTEXT_FINISH_INFO_TITLE=$BrandFullNameDA Uninstall Completed
+ MUI_UNTEXT_FINISH_INFO_TEXT=$BrandFullNameDA has been uninstalled from your computer.\n\nClick Finish to close this wizard.
+ MUI_UNTEXT_FINISH_INFO_REBOOT=Your computer must be restarted in order to complete the uninstallation of $BrandFullNameDA. Do you want to reboot now?
+ MUI_UNTEXT_ABORTWARNING=Are you sure you want to quit $BrandFullName Uninstall?
+diff -r 4a19f1338175 build/macosx/universal/flight.mk
+--- a/build/macosx/universal/flight.mk	Mon Mar 15 12:34:17 2010 -0400
++++ b/build/macosx/universal/flight.mk	Mon Mar 29 11:05:34 2010 -0600
+@@ -101,7 +101,7 @@
+ 	  $(DIST_PPC)/$(MOZ_PKG_APPNAME)/$(APPNAME)/$(BUILDCONFIG_JAR) \
+ 	  $(DIST_X86)/$(MOZ_PKG_APPNAME)/$(APPNAME)/$(BUILDCONFIG_JAR)
+ 	mkdir -p $(DIST_UNI)/$(MOZ_PKG_APPNAME)
+-	rm -f $(DIST_X86)/universal
++	rm -rf $(DIST_X86)/universal
+ 	ln -s $(DIST_UNI) $(DIST_X86)/universal
+ 	rm -rf $(DIST_UNI)/$(MOZ_PKG_APPNAME)/$(APPNAME)
+ 	$(TOPSRCDIR)/build/macosx/universal/unify \
+diff -r 4a19f1338175 build/unix/run-mozilla.sh
+--- a/build/unix/run-mozilla.sh	Mon Mar 15 12:34:17 2010 -0400
++++ b/build/unix/run-mozilla.sh	Mon Mar 29 11:05:34 2010 -0600
+@@ -333,7 +333,7 @@
+ LIBPATH=${MOZ_DIST_BIN}:${MRE_HOME}${LIBPATH+":$LIBPATH"}
+ #
+ ## Set DYLD_LIBRARY_PATH for Mac OS X (Darwin)
+-DYLD_LIBRARY_PATH=${MOZ_DIST_BIN}:${MRE_HOME}${DYLD_LIBRARY_PATH+":$DYLD_LIBRARY_PATH"}
++# DYLD_LIBRARY_PATH=${MOZ_DIST_BIN}:${MRE_HOME}${DYLD_LIBRARY_PATH+":$DYLD_LIBRARY_PATH"}
+ #
+ ## Set LIBRARY_PATH for BeOS
+ LIBRARY_PATH=${MOZ_DIST_BIN}:${MOZ_DIST_BIN}/components:${MRE_HOME}${LIBRARY_PATH+":$LIBRARY_PATH"}
+diff -r 4a19f1338175 configure.in
+--- a/configure.in	Mon Mar 15 12:34:17 2010 -0400
++++ b/configure.in	Mon Mar 29 11:05:34 2010 -0600
+@@ -4672,6 +4672,18 @@
+   AC_DEFINE(MOZ_PHOENIX)
+   ;;
+ 
++kiosk)
++  MOZ_APP_VERSION=`cat $topsrcdir/kiosk/config/version.txt`
++  MOZ_PKG_SPECIAL=`cat $topsrcdir/kiosk/config/appname.txt`
++  MOZ_APP_NAME=`cat $topsrcdir/kiosk/config/appname.txt`$MOZ_APP_VERSION
++  MOZ_APP_DISPLAYNAME=`cat $topsrcdir/kiosk/config/appname.txt`$MOZ_APP_VERSION
++  MOZ_PHOENIX=1
++  MOZ_KIOSK=1
++  AC_DEFINE(MOZ_PHOENIX)
++  AC_DEFINE(MOZ_KIOSK)
++  AC_DEFINE(MOZ_PKG_SPECIAL)
++  ;;
++
+ xulrunner)
+   AC_DEFINE(MOZ_XULRUNNER)
+   ;;
+diff -r 4a19f1338175 docshell/base/nsAboutRedirector.cpp
+--- a/docshell/base/nsAboutRedirector.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/docshell/base/nsAboutRedirector.cpp	Mon Mar 29 11:05:34 2010 -0600
+@@ -81,7 +81,7 @@
+       nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT },
+     { "licence", "chrome://global/content/license.html",
+       nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT },
+-    { "neterror", "chrome://global/content/netError.xhtml",
++    { "neterror", "chrome://bmakiosk/content/netError.html",
+       nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
+       nsIAboutModule::ALLOW_SCRIPT }
+ };
+diff -r 4a19f1338175 dom/Makefile.in
+--- a/dom/Makefile.in	Mon Mar 15 12:34:17 2010 -0400
++++ b/dom/Makefile.in	Mon Mar 29 11:05:34 2010 -0600
+@@ -43,7 +43,7 @@
+ include $(DEPTH)/config/autoconf.mk
+ 
+ MODULE		= dom
+-DIRS		= public src locales tests
++DIRS		= ../kiosk/public public src locales tests
+ 
+ include $(topsrcdir)/config/rules.mk
+ 
+diff -r 4a19f1338175 dom/public/nsDOMClassInfoID.h
+--- a/dom/public/nsDOMClassInfoID.h	Mon Mar 15 12:34:17 2010 -0400
++++ b/dom/public/nsDOMClassInfoID.h	Mon Mar 29 11:05:34 2010 -0600
+@@ -389,6 +389,9 @@
+   eDOMClassInfo_DOMParser_id,
+   eDOMClassInfo_XMLSerializer_id,
+ 
++  // KIOSK
++  eDOMClassInfo_Runtime_id,
++
+   // XMLHttpRequest
+   eDOMClassInfo_XMLHttpProgressEvent_id,
+   eDOMClassInfo_XMLHttpRequest_id,
+diff -r 4a19f1338175 dom/src/base/Makefile.in
+--- a/dom/src/base/Makefile.in	Mon Mar 15 12:34:17 2010 -0400
++++ b/dom/src/base/Makefile.in	Mon Mar 29 11:05:34 2010 -0600
+@@ -84,6 +84,7 @@
+ 		  jar \
+ 		  storage \
+ 		  htmlparser \
++		  securebrowser \
+ 		  $(NULL)
+ 
+ ifdef NS_TRACE_MALLOC
+diff -r 4a19f1338175 dom/src/base/nsDOMClassInfo.cpp
+--- a/dom/src/base/nsDOMClassInfo.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/dom/src/base/nsDOMClassInfo.cpp	Mon Mar 29 11:05:34 2010 -0600
+@@ -214,6 +214,9 @@
+ #include "nsIDOMSerializer.h"
+ #include "nsXMLHttpRequest.h"
+ 
++// Kiosk
++#include "mozISecurebrowser.h"
++
+ // includes needed for the prototype chain interfaces
+ #include "nsIDOMNavigator.h"
+ #include "nsIDOMBarProp.h"
+@@ -1212,6 +1215,10 @@
+   NS_DEFINE_CLASSINFO_DATA(XMLSerializer, nsDOMGenericSH,
+                            DOM_DEFAULT_SCRIPTABLE_FLAGS)
+ 
++  // KIOSK
++  NS_DEFINE_CLASSINFO_DATA(Runtime, nsDOMGenericSH,
++                           DOM_DEFAULT_SCRIPTABLE_FLAGS)
++
+   NS_DEFINE_CLASSINFO_DATA(XMLHttpProgressEvent, nsDOMGenericSH,
+                            DOM_DEFAULT_SCRIPTABLE_FLAGS)
+   NS_DEFINE_CLASSINFO_DATA(XMLHttpRequest, nsEventTargetSH,
+@@ -1324,6 +1331,8 @@
+ 
+ static const nsContractIDMapData kConstructorMap[] =
+ {
++  // KIOSK
++  NS_DEFINE_CONSTRUCTOR_DATA(Runtime, "@mozilla.org/securebrowser;1")
+   NS_DEFINE_CONSTRUCTOR_DATA(DOMParser, NS_DOMPARSER_CONTRACTID)
+   NS_DEFINE_CONSTRUCTOR_DATA(XMLSerializer, NS_XMLSERIALIZER_CONTRACTID)
+   NS_DEFINE_CONSTRUCTOR_DATA(XMLHttpRequest, NS_XMLHTTPREQUEST_CONTRACTID)
+@@ -3410,6 +3419,11 @@
+   DOM_CLASSINFO_MAP_BEGIN_NO_CLASS_IF(WindowRoot, nsISupports)
+   DOM_CLASSINFO_MAP_END
+ 
++  // KIOSK
++  DOM_CLASSINFO_MAP_BEGIN(Runtime, mozISecurebrowser)
++    DOM_CLASSINFO_MAP_ENTRY(mozISecurebrowser)
++  DOM_CLASSINFO_MAP_END
++
+   DOM_CLASSINFO_MAP_BEGIN_NO_CLASS_IF(DOMParser, nsIDOMParser)
+     DOM_CLASSINFO_MAP_ENTRY(nsIDOMParser)
+     DOM_CLASSINFO_MAP_ENTRY(nsIDOMParserJS)
+diff -r 4a19f1338175 dom/src/base/nsGlobalWindow.cpp
+--- a/dom/src/base/nsGlobalWindow.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/dom/src/base/nsGlobalWindow.cpp	Mon Mar 29 11:05:34 2010 -0600
+@@ -191,6 +191,14 @@
+ #include "nsBindingManager.h"
+ #include "nsIXBLService.h"
+ 
++#ifdef XP_MACOSX
++  // ADDED --pete
++  #include "MacApplication.h"
++  #include "Processes.h"
++  #include <Carbon/Carbon.h>
++  #include <Quicktime/Quicktime.h>
++#endif
++
+ // used for popup blocking, needs to be converted to something
+ // belonging to the back-end like nsIContentPolicy
+ #include "nsIPopupWindowManager.h"
+@@ -3890,13 +3898,23 @@
+ 
+   NS_ENSURE_TRUE(mDocShell, NS_ERROR_FAILURE);
+ 
++#ifdef XP_MACOSX
++  OSStatus status = SetSystemUIMode(kUIModeAllHidden, kUIOptionDisableProcessSwitch |
++                                    kUIOptionDisableForceQuit |
++                                    kUIOptionDisableSessionTerminate |
++                                    kUIOptionDisableAppleMenu);
++#endif
++
+   PRBool rootWinFullScreen;
+   GetFullScreen(&rootWinFullScreen);
+   // Only chrome can change our fullScreen mode.
++  // for some reason we are not being recognized as chrome on OSX --pete
++/***************
+   if (aFullScreen == rootWinFullScreen || 
+       !nsContentUtils::IsCallerTrustedForWrite()) {
+     return NS_OK;
+   }
++***************/
+ 
+   // SetFullScreen needs to be called on the root window, so get that
+   // via the DocShell tree, and if we are not already the root,
+@@ -3922,6 +3940,7 @@
+   if (!DispatchCustomEvent("fullscreen")) {
+     // event handlers can prevent us from going into full-screen mode
+ 
++    printf("RETURN AAA");
+     return NS_OK;
+   }
+ 
+@@ -3931,6 +3950,22 @@
+ 
+   mFullScreen = aFullScreen;
+ 
++#ifdef XP_MACOSX
++
++  ProcessSerialNumber ourProcess;
++
++  ::GetCurrentProcess (&ourProcess);
++  ::SetFrontProcess(&ourProcess);
++
++  status = SetSystemUIMode(kUIModeAllHidden, kUIOptionDisableProcessSwitch |
++                                    kUIOptionDisableForceQuit |
++                                    kUIOptionDisableSessionTerminate |
++                                    kUIOptionDisableAppleMenu);
++
++  if (status != noErr) printf("-------- ERROR --------\n");
++
++#endif
++
+   return NS_OK;
+ }
+ 
+diff -r 4a19f1338175 netwerk/protocol/http/src/nsHttpHandler.cpp
+--- a/netwerk/protocol/http/src/nsHttpHandler.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/netwerk/protocol/http/src/nsHttpHandler.cpp	Mon Mar 29 11:05:34 2010 -0600
+@@ -619,7 +619,11 @@
+     }
+ 
+     if (!mExtraUA.IsEmpty())
++    {
++        nsCString sbAgent(" (SZcr0DctLYrAxsYhQbnS) AIRSecureBrowser/");
++        mUserAgent += sbAgent;
+         mUserAgent += mExtraUA;
++    }
+ }
+ 
+ void
+@@ -823,7 +827,7 @@
+                     nsXPIDLCString valStr;
+                     branch->GetCharPref(*item, getter_Copies(valStr));
+                     if (!valStr.IsEmpty())
+-                        mExtraUA += NS_LITERAL_CSTRING(" ") + valStr;
++                        mExtraUA += valStr;
+                 }
+                 NS_FREE_XPCOM_ALLOCATED_POINTER_ARRAY(extraCount, extraItems);
+             }
+diff -r 4a19f1338175 widget/src/cocoa/nsAppShell.mm
+--- a/widget/src/cocoa/nsAppShell.mm	Mon Mar 15 12:34:17 2010 -0400
++++ b/widget/src/cocoa/nsAppShell.mm	Mon Mar 29 11:05:34 2010 -0600
+@@ -60,6 +60,12 @@
+ #include "nsChildView.h"
+ #include "nsToolkit.h"
+ 
++// ADDED --pete
++#include "MacApplication.h"
++#include "Processes.h"
++#include <Carbon/Carbon.h>
++#include <Quicktime/Quicktime.h>
++
+ // defined in nsChildView.mm
+ extern nsIRollupListener * gRollupListener;
+ extern nsIWidget         * gRollupWidget;
+@@ -279,6 +285,20 @@
+ {
+   NS_OBJC_BEGIN_TRY_ABORT_BLOCK_NSRESULT;
+ 
++/***************************************
++  printf("-------- Init --------\n");
++
++  ProcessSerialNumber ourProcess;
++
++  ::GetCurrentProcess (&ourProcess);
++  ::SetFrontProcess(&ourProcess);
++
++  SetSystemUIMode(kUIModeAllHidden, kUIOptionDisableProcessSwitch |
++                                    kUIOptionDisableForceQuit |
++                                    kUIOptionDisableSessionTerminate |
++                                    kUIOptionDisableAppleMenu);
++***************************************/
++
+   // No event loop is running yet (unless Camino is running, or another
+   // embedding app that uses NSApplicationMain()).  Avoid autoreleasing
+   // objects to mMainPool.  The appshell retains objects it needs to be
+@@ -767,6 +787,15 @@
+   if (mStarted)
+     return NS_OK;
+ 
++/***************************************
++  printf("-------- RUN --------\n");
++
++  SetSystemUIMode(kUIModeAllHidden, kUIOptionDisableProcessSwitch |
++                                    kUIOptionDisableForceQuit |
++                                    kUIOptionDisableSessionTerminate |
++                                    kUIOptionDisableAppleMenu);
++***************************************/
++
+   mStarted = PR_TRUE;
+   NS_OBJC_TRY_ABORT([NSApp run]);
+ 
+diff -r 4a19f1338175 widget/src/cocoa/nsClipboard.mm
+--- a/widget/src/cocoa/nsClipboard.mm	Mon Mar 15 12:34:17 2010 -0400
++++ b/widget/src/cocoa/nsClipboard.mm	Mon Mar 29 11:05:34 2010 -0600
+@@ -51,6 +51,8 @@
+ #include "nsPrintfCString.h"
+ #include "nsObjCExceptions.h"
+ 
++#include <Scrap.h>
++
+ // Screenshots use the (undocumented) png pasteboard type.
+ #define IMAGE_PASTEBOARD_TYPES NSTIFFPboardType, @"Apple PNG pasteboard type", nil
+ 
+@@ -72,6 +74,9 @@
+ 
+ nsClipboard::~nsClipboard()
+ {
++  printf("nsClipboard DESTROY ...\n");
++  nsBaseClipboard::EmptyClipboard(kGlobalClipboard);
++  ::ClearCurrentScrap();
+ }
+ 
+ 
+diff -r 4a19f1338175 widget/src/cocoa/nsCocoaWindow.mm
+--- a/widget/src/cocoa/nsCocoaWindow.mm	Mon Mar 15 12:34:17 2010 -0400
++++ b/widget/src/cocoa/nsCocoaWindow.mm	Mon Mar 29 11:05:34 2010 -0600
+@@ -67,6 +67,12 @@
+ #include "gfxPlatform.h"
+ #include "qcms.h"
+ 
++// ADDED --pete
++#include "MacApplication.h"
++#include "Processes.h"
++#include <Carbon/Carbon.h>
++#include <Quicktime/Quicktime.h>
++
+ // defined in nsAppShell.mm
+ extern nsCocoaAppModalWindowList *gCocoaAppModalWindowList;
+ 
+@@ -325,12 +331,19 @@
+         features |= NSBorderlessWindowMask;
+         break;
+       case eWindowType_toplevel:
++        PRInt32 previousMode;
++        nsBaseWidget::GetSizeMode(&previousMode);
++
++        // printf("eWindowType_toplevel SizeMode(%d(\n", previousMode);
++
++/************
+         features |= NSTitledWindowMask;
+         features |= NSMiniaturizableWindowMask;
+         if (allOrDefault || aInitData->mBorderStyle & eBorderStyle_close)
+           features |= NSClosableWindowMask;
+         if (allOrDefault || aInitData->mBorderStyle & eBorderStyle_resizeh)
+           features |= NSResizableWindowMask;
++************/
+         break;
+       default:
+         NS_ERROR("Unhandled window type!");
+@@ -1717,10 +1730,54 @@
+ 
+ - (void)sendToplevelDeactivateEvents
+ {
+-  if (mToplevelActiveState) {
++  if (mToplevelActiveState) 
++  {
++    printf("-------- NS_DEACTIVATE --------\n");
++
++    //  block other processes from deactivating our window --pete
++    ProcessSerialNumber PSN, nextPSN;
++
++    SetSystemUIMode(kUIModeAllHidden, kUIOptionDisableProcessSwitch |
++                                    kUIOptionDisableForceQuit |
++                                    kUIOptionDisableSessionTerminate |
++                                    kUIOptionDisableAppleMenu);
++
++
++    OSErr e = GetCurrentProcess(&PSN);
++
++    ProcessInfoRec info;
++    Str63 name;
++    info.processInfoLength = sizeof(ProcessInfoRec);
++    info.processName       = name;
++    info.processAppSpec    = nsnull;
++
++    e = GetProcessInformation(&PSN, &info);
++
++    GetNextProcess(&nextPSN);
++
++    e = GetProcessInformation(&nextPSN, &info);
++
++    // printf("[%s]\n", info.processName);
++          
++    if (PSN.lowLongOfPSN != nextPSN.lowLongOfPSN)
++    {     
++      // hide this next process because it deactivated our window --pete
++      e = ShowHideProcess(&nextPSN, false);
++          
++      e = SetFrontProcess(&PSN);
++                               
++      // return;                  
++    }                          
++
+     [self sendFocusEvent:NS_DEACTIVATE];
+     [self sendFocusEvent:NS_LOSTFOCUS];
+     mToplevelActiveState = PR_FALSE;
++
++    SetSystemUIMode(kUIModeAllHidden, kUIOptionDisableProcessSwitch |
++                                    kUIOptionDisableForceQuit |
++                                    kUIOptionDisableSessionTerminate |
++                                    kUIOptionDisableAppleMenu);
++
+   }
+ }
+ 
+diff -r 4a19f1338175 widget/src/gtk2/nsWindow.cpp
+--- a/widget/src/gtk2/nsWindow.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/widget/src/gtk2/nsWindow.cpp	Mon Mar 29 11:05:34 2010 -0600
+@@ -96,6 +96,8 @@
+ static const char sAccessibilityKey [] = "config.use_system_prefs.accessibility";
+ #endif
+ 
++static PRBool gPointerLocked = PR_FALSE;
++
+ /* For SetIcon */
+ #include "nsAppDirectoryServiceDefs.h"
+ #include "nsXPIDLString.h"
+@@ -155,6 +157,8 @@
+ static GtkWidget *get_gtk_widget_for_gdk_window(GdkWindow *window);
+ static GdkCursor *get_gtk_cursor(nsCursor aCursor);
+ 
++static PRBool gKeysBlocked = PR_FALSE;
++
+ static GdkWindow *get_inner_gdk_window (GdkWindow *aWindow,
+                                         gint x, gint y,
+                                         gint *retx, gint *rety);
+@@ -2262,6 +2266,40 @@
+ #endif // DEBUG
+ #endif
+ 
++void
++nsWindow::LockWindow()
++{
++  printf("LOCK WINDOW!\n\n");
++  XGrabKeyboard(GDK_WINDOW_XDISPLAY(mShell->window), GDK_WINDOW_XWINDOW(mShell->window), False,
++                GrabModeAsync, GrabModeAsync, CurrentTime);
++
++  if (!gPointerLocked) 
++  {
++    XGrabPointer(GDK_WINDOW_XDISPLAY(mShell->window), GDK_WINDOW_XWINDOW(mShell->window),
++                 True, 0, GrabModeAsync, GrabModeAsync, GDK_WINDOW_XWINDOW(mShell->window),
++                 None, CurrentTime);
++    gPointerLocked = PR_TRUE;
++  }
++
++   // mLockWindow = PR_TRUE;
++}
++
++void
++nsWindow::LockWindow(GtkWidget *aWidget, PRBool aMask)
++{
++  if (!aWidget) return;
++
++  XGrabKeyboard(GDK_WINDOW_XDISPLAY(aWidget->window), GDK_WINDOW_XWINDOW(aWidget->window),
++                False, GrabModeAsync, GrabModeAsync, CurrentTime);
++
++
++  /***************************
++  XGrabPointer(GDK_WINDOW_XDISPLAY(aWidget->window), GDK_ROOT_WINDOW(),
++               True, 0, GrabModeAsync, GrabModeAsync, GDK_WINDOW_XWINDOW(aWidget->window),
++               None, CurrentTime);
++  ***************************/
++}
++
+ gboolean
+ nsWindow::OnExposeEvent(GtkWidget *aWidget, GdkEventExpose *aEvent)
+ {
+@@ -3127,8 +3165,45 @@
+ gboolean
+ nsWindow::OnKeyPressEvent(GtkWidget *aWidget, GdkEventKey *aEvent)
+ {
++  if (gKeysBlocked) 
++  {
++    SetFocus(TRUE);
++    return FALSE;
++  }
++
++  // get the parent
++  GtkWidget *parentWidget;
++  parentWidget = gtk_widget_get_toplevel(aWidget);
++
++  if (parentWidget) 
++  {
++    nsWindow *window = get_window_for_gtk_widget(parentWidget);
++    if (window) 
++    {
++      if (aEvent->state & GDK_CONTROL_MASK && aEvent->state & GDK_MOD1_MASK && aEvent->keyval == GDK_Escape)
++      {
++        printf("1 QUITTING APP ...\n");
++        gtk_main_quit();
++      } 
++        else
++      {
++        if (aEvent->state & GDK_MOD1_MASK || aEvent->state & GDK_CONTROL_MASK)
++          window->LockWindow(parentWidget, PR_TRUE);
++        else
++          window->LockWindow(parentWidget);
++      }
++    }
++  }
++
+     LOGFOCUS(("OnKeyPressEvent [%p]\n", (void *)this));
+ 
++  if (aEvent->type == GDK_UNMAP) 
++  {
++    g_print("gdk_directfb_other_event_window\n");
++    return TRUE;
++  }
++
++
+ #ifdef USE_XIM
+     // if we are in the middle of composing text, XIM gets to see it
+     // before mozilla does.
+@@ -3318,6 +3393,17 @@
+ gboolean
+ nsWindow::OnKeyReleaseEvent(GtkWidget *aWidget, GdkEventKey *aEvent)
+ {
++  // get the parent
++  GtkWidget *parentWidget;
++  parentWidget = gtk_widget_get_toplevel(aWidget);
++
++  if (parentWidget) 
++  {
++    nsWindow *window = get_window_for_gtk_widget(parentWidget);
++    if (window)
++      window->LockWindow(parentWidget);
++  }
++
+     LOGFOCUS(("OnKeyReleaseEvent [%p]\n", (void *)this));
+ 
+ #ifdef USE_XIM
+diff -r 4a19f1338175 widget/src/gtk2/nsWindow.h
+--- a/widget/src/gtk2/nsWindow.h	Mon Mar 15 12:34:17 2010 -0400
++++ b/widget/src/gtk2/nsWindow.h	Mon Mar 29 11:05:34 2010 -0600
+@@ -235,6 +235,8 @@
+ 
+     // utility methods
+     void               LoseFocus();
++    void               LockWindow();
++    void               LockWindow(GtkWidget *aWidget, PRBool aMask=PR_FALSE);
+     gint               ConvertBorderStyles(nsBorderStyle aStyle);
+ 
+     // event callbacks
+diff -r 4a19f1338175 widget/src/windows/nsAppShell.cpp
+--- a/widget/src/windows/nsAppShell.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/widget/src/windows/nsAppShell.cpp	Mon Mar 29 11:05:34 2010 -0600
+@@ -41,6 +41,424 @@
+ #include "nsToolkit.h"
+ #include "nsThreadUtils.h"
+ 
++#include <process.h>
++#include <commctrl.h>
++  
++// START:KIOSK
++#define HKCU HKEY_CURRENT_USER
++
++// Magic registry key/value for "Remove Task Manager" policy.
++
++LPCTSTR KEY_DisableTaskMgr =
++        "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System";
++
++LPCTSTR VAL_DisableTaskMgr = "DisableTaskMgr";
++
++STICKYKEYS g_StartupStickyKeys = {sizeof(STICKYKEYS), 0};
++TOGGLEKEYS g_StartupToggleKeys = {sizeof(TOGGLEKEYS), 0};
++FILTERKEYS g_StartupFilterKeys = {sizeof(FILTERKEYS), 0};
++
++HIGHCONTRAST g_StartupHighContrast = {sizeof(HIGHCONTRAST), 0};
++
++// MOUSEKEYS g_StartupMouseKeys;
++MOUSEKEYS g_StartupMouseKeys = {sizeof(MOUSEKEYS), 0};
++
++HHOOK g_Hook = NULL;
++BOOL g_IsSet = FALSE;
++BOOL g_TMWasSet = FALSE;
++
++char G_CONFIGURATION[2048];
++
++// #define DEBUG_PETE
++
++void PrintLogMsg (char *aMsg)
++{
++
++#ifndef DEBUG_PETE
++  return;
++#endif
++
++  char path[MAX_PATH] = "c:\\tmp\\out.log";
++
++  FILE* mLog;
++  mLog = fopen(path, "a");
++
++  fprintf(mLog, "LOG MESSAGE: (%s)\n", aMsg);
++  fflush(mLog);
++
++  fclose(mLog);
++}
++
++void PrintLogWMsg (wchar_t *aMsg)
++{
++
++#ifndef DEBUG_PETE
++  return;
++#endif
++
++  char path[MAX_PATH] = "c:\\tmp\\out.log";
++
++  FILE* mLog;
++  mLog = fopen(path, "a");
++
++  fwprintf(mLog, L"LOG W MESSAGE: (%ls)\n", aMsg);
++  fflush(mLog);
++
++  fclose(mLog);
++}
++
++void PrintLogInt (DWORD aInt)
++{
++
++#ifndef DEBUG_PETE
++  return;
++#endif
++
++  char path[MAX_PATH] = "c:\\tmp\\out.log";
++
++  FILE* mLog;
++  mLog = fopen(path, "a");
++
++  fprintf(mLog, "LOG INT: (%d)\n", aInt);
++  fflush(mLog);
++
++  fclose(mLog);
++}
++
++static BOOL CALLBACK gEnumWindowsProc(HWND hwnd, LPARAM lParam)
++{
++
++#ifndef DEBUG_PETE
++  return TRUE;
++#endif
++
++  PrintLogMsg("CALLBACK");
++
++    char name[256];
++    GetWindowText(hwnd, name, 256);
++
++    PrintLogMsg(name);
++    
++  if (::IsWindowVisible(hwnd))
++  {
++    PrintLogMsg("WINDOW IS VISIBLE");
++    // return FALSE;
++  }
++  return TRUE;
++}
++
++
++LRESULT CALLBACK LowLevelKeyboardProc (INT nCode, WPARAM wParam, LPARAM lParam)
++{
++    // By returning a non-zero value from the hook procedure, the
++    // message does not get passed to the target window
++    KBDLLHOOKSTRUCT *pkbhs = (KBDLLHOOKSTRUCT *) lParam;
++    BOOL bControlKeyDown = 0;
++    BOOL bShiftKeyDown = 0;
++    BOOL bMenuKeyDown = 0;
++    BOOL bLMenuKeyDown = 0;
++    BOOL bRShiftKeyDown = 0;
++    BOOL bLShiftKeyDown = 0;
++
++    switch (nCode)
++    {
++        case HC_ACTION:
++        {
++            // Check to see if the CTRL key is pressed
++            bControlKeyDown = (GetAsyncKeyState(VK_CONTROL) & 0x8000);
++            
++            // Check to see if the SHIFT key is pressed
++            bShiftKeyDown = (GetAsyncKeyState(VK_SHIFT) & 0x8000);
++
++            // Check to see if the RIGHT SHIFT key is pressed
++            bRShiftKeyDown = (GetAsyncKeyState(VK_RSHIFT) & 0x8000);
++
++            // Check to see if the LEFT SHIFT key is pressed
++            bLShiftKeyDown = (GetAsyncKeyState(VK_LSHIFT) & 0x8000);
++
++            // Check to see if the ALT key is pressed
++            bMenuKeyDown = (GetAsyncKeyState(VK_MENU) & 0x8000);
++
++            // Check to see if the LEFT ALT key is pressed
++            bLMenuKeyDown = (GetAsyncKeyState(VK_LMENU) & 0x8000);
++
++            // Disable CTRL+ESC
++            if (pkbhs->vkCode == VK_ESCAPE && bControlKeyDown)
++                return 1;
++
++            // Disable ALT+TAB
++            if ( (GetKeyState(VK_LMENU) & 0x8000) && pkbhs->vkCode == VK_TAB)
++                return 1;
++
++            // Disable ALT+TAB
++            if ( (GetKeyState(VK_RMENU) & 0x8000) && pkbhs->vkCode == VK_TAB)
++                return 1;
++
++            // Disable ALT+TAB
++            if (pkbhs->vkCode == VK_TAB && pkbhs->flags & LLKHF_ALTDOWN)
++                return 1;
++
++            // Disable ALT+TAB
++            if (pkbhs->vkCode == VK_TAB && pkbhs->flags & LLKHF_ALTDOWN)
++                return 1;
++
++            // Disable ALT+ESC
++            if (pkbhs->vkCode == VK_ESCAPE && pkbhs->flags & LLKHF_ALTDOWN)
++                return 1;
++
++            // Disable LEFT WIN BUTTON
++            if (pkbhs->vkCode == VK_LWIN)
++                return 1;
++
++            // Disable RIGHT WIN BUTTON
++            if (pkbhs->vkCode == VK_RWIN)
++                return 1;
++
++            // Disable ALT+F4
++            if (pkbhs->vkCode == VK_F4 && bMenuKeyDown)
++                return 1;
++
++            // Disable ALT+SPACE
++            if (pkbhs->vkCode == VK_SPACE && bMenuKeyDown)
++                return 1;
++
++            // Disable CTRL+ALT+TAB
++            if (pkbhs->vkCode == VK_TAB && bMenuKeyDown && bControlKeyDown)
++                return 1;
++
++            // Disable CTRL+ALT+DELETE
++            if (pkbhs->vkCode == VK_DELETE && bMenuKeyDown && bControlKeyDown)
++                return 1;
++
++            // Disable Left Alt+Shift+NumLock - doesn't work
++            if (pkbhs->vkCode == VK_NUMLOCK && bShiftKeyDown && bMenuKeyDown)
++                return 1;
++
++            // QUIT ALT+CTRL+SHIFT+F10
++            if (pkbhs->vkCode == VK_F10 && bControlKeyDown && bShiftKeyDown && bMenuKeyDown) 
++              PostQuitMessage(0);
++
++            // Ctrl+ key
++            if (pkbhs->vkCode == 0x6B && bControlKeyDown)
++                return 1;
++
++            // Ctrl- key
++            if (pkbhs->vkCode == 0x6D && bControlKeyDown)
++                return 1;
++
++            // not listed in vir keycodes
++            if (pkbhs->vkCode == 0x5F)
++                return 1;
++
++            // not listed in vir keycodes
++            if (pkbhs->vkCode == 0xAA)
++                return 1;
++
++            // not listed in vir keycodes
++            if (pkbhs->vkCode == 0xAB)
++                return 1;
++
++            // not listed in vir keycodes
++            if (pkbhs->vkCode == 0xAC)
++                return 1;
++
++            // not listed in vir keycodes
++            if (pkbhs->vkCode == 0xAD)
++                return 1;
++
++            // not listed in vir keycodes
++            if (pkbhs->vkCode == 0xAE)
++                return 1;
++
++            // not listed in vir keycodes
++            if (pkbhs->vkCode == 0xB2)
++                return 1;
++
++            // not listed in vir keycodes
++            if (pkbhs->vkCode == 0xAF)
++                return 1;
++
++            if (pkbhs->vkCode == 0xB0)
++                return 1;
++
++            if (pkbhs->vkCode == 0xB1)
++                return 1;
++
++            if (pkbhs->vkCode == 0xB3)
++                return 1;
++
++            if (pkbhs->vkCode == 0xB4)
++                return 1;
++
++            if (pkbhs->vkCode == 0xB5)
++                return 1;
++
++            if (pkbhs->vkCode == 0xB6)
++                return 1;
++
++            if (pkbhs->vkCode == 0xB7)
++                return 1;
++
++            break;
++        }
++
++        default:
++            break;
++    }
++
++    return CallNextHookEx (g_Hook, nCode, wParam, lParam);
++}
++
++void DisableWinDesktop(BOOL bDisable)
++{
++  LONG res = 0;
++
++  OSVERSIONINFOEX osvi;
++
++  ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
++
++  osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
++
++  GetVersionEx((OSVERSIONINFO *) &osvi);
++
++  PRBool isVista = (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0);
++  PRBool isWin7 = (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1);
++
++
++  // task manager (Ctrl+Alt+Del)
++  HKEY hk;
++
++  if (RegOpenKeyEx(HKCU, KEY_DisableTaskMgr, 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) != ERROR_SUCCESS)
++  {
++    res = RegCreateKey(HKCU, KEY_DisableTaskMgr, &hk);
++  }
++
++  if (bDisable)
++  {
++    // disable TM: set policy = 1
++    DWORD val = 1;
++
++    DWORD v,t,s=sizeof(DWORD);
++
++
++    // see if Task Manager was already disabled ...
++    res = RegQueryValueEx(hk, VAL_DisableTaskMgr, NULL, &t, (LPBYTE)&v, &s);
++
++    if (res == ERROR_SUCCESS && t == REG_DWORD && v == 1) g_TMWasSet = TRUE;
++
++
++    res = RegSetValueEx(hk, VAL_DisableTaskMgr, NULL, REG_DWORD, (BYTE*)&val, sizeof(val));
++
++    if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
++    {
++      res = RegSetValueEx(hk, "HideFastUserSwitching", NULL, REG_DWORD, (BYTE*)&val, sizeof(val));
++    }
++
++    if (isVista || isWin7)
++    {
++      if (RegOpenKeyEx(HKCU, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Accessibility", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
++      {
++        DWORD size = sizeof(G_CONFIGURATION);
++
++        // the the currently set value and set it globally so we can reset it when we shut down
++        res = RegQueryValueEx(hk, "Configuration", NULL, NULL, (LPBYTE)G_CONFIGURATION, &size);
++
++        res = RegSetValueEx(hk, "Configuration", NULL, REG_SZ, (const BYTE*)TEXT(""), sizeof(TEXT("")));
++      }
++    }
++
++    STICKYKEYS skOff = g_StartupStickyKeys;
++
++    // Disable the hotkey and the confirmation
++    skOff.dwFlags &= ~SKF_HOTKEYACTIVE;
++    skOff.dwFlags &= ~SKF_CONFIRMHOTKEY;
++
++    BOOL bSuccess = SystemParametersInfo(SPI_SETSTICKYKEYS, sizeof(STICKYKEYS), &skOff, 0);
++
++    TOGGLEKEYS tkOff = g_StartupToggleKeys; 
++
++    tkOff.dwFlags &= ~TKF_HOTKEYACTIVE;
++    tkOff.dwFlags &= ~TKF_CONFIRMHOTKEY;
++
++    bSuccess = SystemParametersInfo(SPI_SETTOGGLEKEYS, sizeof(TOGGLEKEYS), &tkOff, 0);
++
++    FILTERKEYS fkOff = g_StartupFilterKeys;
++
++    fkOff.dwFlags &= ~FKF_HOTKEYACTIVE;
++    fkOff.dwFlags &= ~FKF_CONFIRMHOTKEY;
++
++    bSuccess = SystemParametersInfo(SPI_SETFILTERKEYS, sizeof(FILTERKEYS), &fkOff, 0);
++
++    HIGHCONTRAST hcOff = g_StartupHighContrast;
++
++    hcOff.dwFlags &= ~HCF_HOTKEYACTIVE;
++    hcOff.dwFlags &= ~HCF_CONFIRMHOTKEY;
++
++    bSuccess = SystemParametersInfo(SPI_SETHIGHCONTRAST, sizeof(HIGHCONTRAST), &hcOff, 0);
++
++    MOUSEKEYS mkf;
++
++    // Fill in the members of the MOUSEKEYS structure.
++
++    mkf.cbSize = sizeof(MOUSEKEYS);
++    mkf.dwFlags = NULL;
++    mkf.iMaxSpeed = 200;
++    mkf.iTimeToMaxSpeed = 1000;
++    mkf.iCtrlSpeed = 2;
++    mkf.dwReserved1 = 0;
++    mkf.dwReserved2 = 0;
++
++    // Call SystemParametersInfo with the SPI_SETMOUSEKEYS flag. 
++
++    bSuccess = SystemParametersInfo(SPI_SETMOUSEKEYS, sizeof(MOUSEKEYS), (LPVOID) &mkf, 0); 
++  }
++    else
++  {
++    // remove entry only if not Vista and not Win7
++    if (!isVista && !isWin7 && !g_TMWasSet) RegDeleteValue(hk, VAL_DisableTaskMgr);
++  }
++
++  HWND hwnd = FindWindow("Shell_traywnd", NULL);
++  ShowWindow(FindWindow("Shell_TrayWnd", NULL), SW_HIDE);
++  ShowWindow(FindWindowEx(hwnd, 0, "Button", ""), SW_HIDE);
++
++  if (bDisable)
++  {
++    ShowWindow(hwnd, SW_HIDE); // hide it
++    EnableWindow(hwnd, FALSE); // disable it
++    EnableWindow(FindWindowEx(hwnd, 0, "Button", ""), FALSE); // disable it
++
++    if (isVista || isWin7)
++    {
++      HWND startOrb = FindWindowEx(NULL, NULL, MAKEINTATOM(0xC017), NULL);
++      ShowWindow(startOrb, SW_HIDE); // Hide Vista Start Orb
++    }
++  }
++    else
++  {
++    ShowWindow(hwnd, SW_SHOW); // show it
++    EnableWindow(hwnd, TRUE);  // enable it
++    EnableWindow(FindWindowEx(hwnd, 0, "Button", ""), TRUE); // enable it
++    ShowWindow(FindWindowEx(hwnd, 0, "Button", ""), SW_SHOW);
++
++    if (isVista || isWin7)
++    {
++      HWND startOrb = FindWindowEx(NULL, NULL, MAKEINTATOM(0xC017), NULL);
++      ShowWindow(startOrb, SW_SHOW); // Show Vista Start Orb
++    }
++  }
++
++  UINT nPreviousState;
++  // this call only works on older win32 OS's --pete
++  SystemParametersInfo (SPI_SETSCREENSAVERRUNNING, TRUE, &nPreviousState, 0);
++
++  g_Hook = SetWindowsHookEx(WH_KEYBOARD_LL, LowLevelKeyboardProc, GetModuleHandle(NULL), 0);
++
++}
++
++// END:KIOSK
++
++
+ #ifdef WINCE
+ BOOL WaitMessage(VOID)
+ {
+@@ -83,6 +501,119 @@
+   return false;
+ }
+ 
++//-------------------------------------------------------------------------
++nsAppShell::nsAppShell()  
++  : mEventWnd(NULL) 
++{ 
++
++  // PrintLogMsg("CONSTRUCTOR ...");
++
++  DisableWinDesktop(TRUE);
++
++  // PrintLogInt(g_IsSet);
++
++  if (!g_IsSet)
++  {
++    // PrintLogMsg("GETTING STATE INFO ...");
++
++    BOOL bStatus;
++    HKEY hk;
++    DWORD type;
++    char buf[2048];
++    DWORD size = sizeof(buf);
++
++
++    bStatus = SystemParametersInfo(SPI_GETSTICKYKEYS, sizeof(STICKYKEYS), &g_StartupStickyKeys, 0);
++
++    // PrintLogInt(bStatus);
++
++    // get sticky key flags
++    if (RegOpenKeyEx(HKCU, "Control Panel\\Accessibility\\StickyKeys", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
++    {
++      RegQueryValueEx(hk, "Flags", NULL, &type, (LPBYTE)buf, &size);
++
++      if (type == REG_SZ) 
++      {
++        // PrintLogMsg("STICKY KEYS");
++        // PrintLogMsg(buf);
++        g_StartupStickyKeys.dwFlags = atoi(buf);
++      }
++    }
++
++    bStatus = SystemParametersInfo(SPI_GETTOGGLEKEYS, sizeof(TOGGLEKEYS), &g_StartupToggleKeys, 0);
++    // PrintLogInt(bStatus);
++
++    // get toggle key flags
++    if (RegOpenKeyEx(HKCU, "Control Panel\\Accessibility\\ToggleKeys", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
++    {
++      RegQueryValueEx(hk, "Flags", NULL, &type, (LPBYTE)buf, &size);
++
++      if (type == REG_SZ) 
++      {
++        // PrintLogMsg("TOGGLE KEYS");
++        // PrintLogMsg(buf);
++        g_StartupToggleKeys.dwFlags = atoi(buf);
++      }
++    }
++
++    bStatus = SystemParametersInfo(SPI_GETFILTERKEYS, sizeof(FILTERKEYS), &g_StartupFilterKeys, 0);
++    // PrintLogInt(bStatus);
++
++    // get filter key flags
++    if (RegOpenKeyEx(HKCU, "Control Panel\\Accessibility\\Keyboard Response", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
++    {
++      RegQueryValueEx(hk, "Flags", NULL, &type, (LPBYTE)buf, &size);
++
++      if (type == REG_SZ) 
++      {
++        // PrintLogMsg("FILTER KEYS");
++        // PrintLogMsg(buf);
++        g_StartupFilterKeys.dwFlags = atoi(buf);
++      }
++    }
++
++    bStatus = SystemParametersInfo(SPI_GETHIGHCONTRAST, sizeof(HIGHCONTRAST), &g_StartupHighContrast, 0);
++    // PrintLogInt(bStatus);
++
++    // get filter key flags
++    if (RegOpenKeyEx(HKCU, "Control Panel\\Accessibility\\HighContrast", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
++    {
++      RegQueryValueEx(hk, "Flags", NULL, &type, (LPBYTE)buf, &size);
++
++      if (type == REG_SZ) 
++      {
++        // PrintLogMsg("HIGH CONTRAST");
++        // PrintLogMsg(buf);
++        g_StartupHighContrast.dwFlags = atoi(buf);
++      }
++    }
++
++    g_StartupMouseKeys.dwFlags = 0;
++    g_StartupMouseKeys.iMaxSpeed = NULL;
++    g_StartupMouseKeys.iTimeToMaxSpeed = NULL;
++    g_StartupMouseKeys.iCtrlSpeed = NULL;
++    g_StartupMouseKeys.dwReserved1 = 0;
++    g_StartupMouseKeys.dwReserved2 = 0;
++
++    bStatus = SystemParametersInfo(SPI_GETMOUSEKEYS, sizeof(g_StartupMouseKeys), &g_StartupMouseKeys, 0);
++
++    // get mouse key flags
++    if (RegOpenKeyEx(HKCU, "Control Panel\\Accessibility\\MouseKeys", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
++    {
++      RegQueryValueEx(hk, "Flags", NULL, &type, (LPBYTE)buf, &size);
++
++      if (type == REG_SZ) 
++      {
++        // PrintLogMsg("MOUSE KEYS");
++        // PrintLogMsg(buf);
++        g_StartupMouseKeys.dwFlags = atoi(buf);
++      }
++    }
++
++    g_IsSet = TRUE;
++  }
++}
++  
+ /*static*/ LRESULT CALLBACK
+ nsAppShell::EventWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+ {
+@@ -157,7 +688,45 @@
+         ::PeekMessageW(&msg, NULL, WM_MOUSEFIRST, WM_MOUSELAST, PM_REMOVE) || 
+         ::PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
+       gotMessage = PR_TRUE;
+-      if (msg.message == WM_QUIT) {
++      if (msg.message == WM_QUIT) 
++      {
++        
++          DisableWinDesktop(FALSE);
++          ::OleSetClipboard(NULL);
++        
++          BOOL bStatus;
++        
++          bStatus = SystemParametersInfo(SPI_SETSTICKYKEYS, sizeof(STICKYKEYS), &g_StartupStickyKeys, 0);
++          bStatus = SystemParametersInfo(SPI_SETTOGGLEKEYS, sizeof(TOGGLEKEYS), &g_StartupToggleKeys, 0);
++          bStatus = SystemParametersInfo(SPI_SETFILTERKEYS, sizeof(FILTERKEYS), &g_StartupFilterKeys, 0);
++          bStatus = SystemParametersInfo(SPI_SETHIGHCONTRAST, sizeof(HIGHCONTRAST), &g_StartupHighContrast, 0);
++          bStatus = SystemParametersInfo(SPI_SETMOUSEKEYS, sizeof(MOUSEKEYS), &g_StartupMouseKeys, 0);
++        
++        
++          OSVERSIONINFOEX osvi;
++        
++          ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
++        
++          osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
++        
++          GetVersionEx((OSVERSIONINFO *) &osvi);
++        
++          PRBool isVista = (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0);
++          PRBool isWin7 = (osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 1);
++        
++          HKEY hk;
++        
++          if (isVista || isWin7)
++          {
++            if (RegOpenKeyEx(HKCU, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Accessibility", 0, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) == ERROR_SUCCESS)
++            {
++              LONG res = 0;
++        
++              res = RegSetValueEx(hk, "Configuration", NULL, REG_SZ, (const BYTE*)G_CONFIGURATION, strlen(G_CONFIGURATION));
++        
++            }
++          }
++        
+         ::PostQuitMessage(msg.wParam);
+         Exit();
+       } else {
+diff -r 4a19f1338175 widget/src/windows/nsAppShell.h
+--- a/widget/src/windows/nsAppShell.h	Mon Mar 15 12:34:17 2010 -0400
++++ b/widget/src/windows/nsAppShell.h	Mon Mar 29 11:05:34 2010 -0600
+@@ -47,7 +47,7 @@
+ class nsAppShell : public nsBaseAppShell
+ {
+ public:
+-  nsAppShell() : mEventWnd(NULL) {}
++  nsAppShell();
+ 
+   nsresult Init();
+ 
+diff -r 4a19f1338175 widget/src/windows/nsClipboard.cpp
+--- a/widget/src/windows/nsClipboard.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/widget/src/windows/nsClipboard.cpp	Mon Mar 29 11:05:34 2010 -0600
+@@ -93,7 +93,7 @@
+ //-------------------------------------------------------------------------
+ nsClipboard::~nsClipboard()
+ {
+-
++  ::OleSetClipboard(NULL);
+ }
+ 
+ //-------------------------------------------------------------------------
+diff -r 4a19f1338175 widget/src/windows/nsWindow.cpp
+--- a/widget/src/windows/nsWindow.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/widget/src/windows/nsWindow.cpp	Mon Mar 29 11:05:34 2010 -0600
+@@ -1258,6 +1258,8 @@
+   return ::CallWindowProcW((FARPROC)someWindow->GetPrevWindowProc(), hWnd,
+                                     msg, wParam, lParam);
+ #endif
++
++
+ }
+ 
+ //
+@@ -1269,6 +1271,7 @@
+   return ::DefWindowProcW(hWnd, msg, wParam, lParam);
+ }
+ 
++
+ //WINOLEAPI oleStatus;
+ //-------------------------------------------------------------------------
+ //
+@@ -1694,6 +1697,9 @@
+               ::SetForegroundWindow(mWnd);
+ #endif
+               ::ShowWindow(mWnd, SW_SHOWNORMAL);
++              // set always on top
++              ::SetFocus(mWnd);
++              ::SetWindowPos(mWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_SHOWWINDOW);
+             } else {
+               // Place the window behind the foreground window
+               // (as long as it is not topmost)
+diff -r 4a19f1338175 toolkit/library/Makefile.in
+--- a/toolkit/library/Makefile.in	Mon Mar 15 12:34:17 2010 -0400
++++ b/toolkit/library/Makefile.in	Thu Apr 15 16:08:24 2010 -0600
+@@ -82,6 +82,13 @@
+ CPPSRCS += dlldeps-xul.cpp
+ endif
+ 
++ifeq ($(OS_ARCH), Linux)
++# LOCAL_INCLUDES          = -I/usr/include/festival -I/usr/include/speech_tools
++
++OS_LIBS += -lncurses
++endif
++
++
+ # dependent libraries
+ ifneq (,$(MOZ_ENABLE_GTK2))
+ SHARED_LIBRARY_LIBS += \
+@@ -285,3 +292,4 @@
+ ifneq (,$(filter layout-debug,$(MOZ_EXTENSIONS)))
+ DEFINES += -DMOZ_ENABLE_EXTENSION_LAYOUT_DEBUG
+ endif
++
+diff -r 4a19f1338175 toolkit/library/libxul-config.mk
+--- a/toolkit/library/libxul-config.mk	Mon Mar 15 12:34:17 2010 -0400
++++ b/toolkit/library/libxul-config.mk	Thu Apr 15 16:08:24 2010 -0600
+@@ -128,6 +128,7 @@
+ 	toolkitcomps \
+ 	pipboot \
+ 	pipnss \
++	securebrowser \
+ 	$(NULL)
+ 
+ ifdef MOZ_XMLEXTRAS
+diff -r 4a19f1338175 toolkit/library/nsStaticXULComponents.cpp
+--- a/toolkit/library/nsStaticXULComponents.cpp	Mon Mar 15 12:34:17 2010 -0400
++++ b/toolkit/library/nsStaticXULComponents.cpp	Thu Apr 15 16:08:24 2010 -0600
+@@ -312,6 +312,7 @@
+     LAYOUT_DEBUG_MODULE                      \
+     UNIXPROXY_MODULE                         \
+     OSXPROXY_MODULE                          \
++    MODULE(mozSecurebrowserModule)           \
+     /* end of list */
+ 
+ #define MODULE(_name) \
+diff -r 4a19f1338175 toolkit/toolkit-tiers.mk
+--- a/toolkit/toolkit-tiers.mk	Mon Mar 15 12:34:17 2010 -0400
++++ b/toolkit/toolkit-tiers.mk	Thu Apr 15 16:08:24 2010 -0600
+@@ -240,6 +240,9 @@
+ endif
+ endif
+ 
++#kiosk
++tier_toolkit_dirs += kiosk/src
++
+ ifndef BUILD_STATIC_LIBS
+ tier_toolkit_dirs += toolkit/library
+ endif

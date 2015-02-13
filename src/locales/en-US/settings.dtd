@@ -1,0 +1,118 @@
+<!-- Admin Settings Window -->
+<!ENTITY app.name                       "Open Kiosk">
+<!ENTITY window.title                   "Admin Settings">
+
+<!-- Tab Names -->
+<!ENTITY browser.tab.label              "Browser">
+<!ENTITY filters.tab.label              "Filters">
+<!ENTITY sessions.tab.label             "Sessions">
+<!ENTITY customize.tab.label            "Customize">
+<!ENTITY admin.tab.label                "Admin">
+
+<!-- homepage -->
+<!ENTITY homepagebox.caption            "Home Page">
+<!ENTITY abouthomepage.label            "This page will be loaded at startup and when the Home button is activated.">
+<!ENTITY location.label                 "Location">
+<!ENTITY defaultbtn.label               "Use Default">
+
+<!-- Attract Screen -->
+<!ENTITY attractbox.caption             "Attract Screen">
+<!ENTITY attractenable.label            "Enable Attract Screen">
+<!ENTITY aboutattract.label             "When enabled, this setting overrides the Home Page and loads on startup, session reset, and when the Home button is pressed. The URL entered below will open in full screen mode hiding any preconfigured toolbars.">
+
+<!-- Redirect Screen -->
+<!ENTITY redirectbox.caption            "Redirect Screen">
+<!ENTITY redirectenable.label           "Enable Redirect Screen">
+<!ENTITY redirect.label                 "When enabled, this page will be loaded when a blocked page is encountered.">
+
+<!-- Default Browser -->
+<!--
+<!ENTITY browser.caption                "Default Browser">
+-->
+
+<!ENTITY browser.caption                "Window Mode">
+<!ENTITY aboutbrowser.label             "Choosing this option will set the Kiosk as your default Mozilla browser for this installation. What this means is that the Kiosk will be launched for shortcuts to the Mozilla executable, and when launching Mozilla from the commandline.">
+<!ENTITY checkbrowser.label             "Set the Kiosk as your default Mozilla browser">
+<!ENTITY mode.label                     "Default Kiosk browser mode:">
+<!ENTITY modefull.label                 "Full Screen">
+<!ENTITY modetitle.label                "With titlebar">
+
+<!-- Filter file selection -->
+<!ENTITY filterbox.caption              "Filter Files">
+<!ENTITY filterenable.label             "Enable Filters (Off allows all content)">
+<!ENTITY aboutfilter.label              "If you enable filters, the file selected here will be used for extracting whitelist URLs allowed to be viewed in the kiosk browser. The config file is plain text with .txt extension.">
+<!ENTITY samplelink.label               "View Sample...">
+<!ENTITY flteredit.button               "Save">
+<!ENTITY contentsamplelink.title        "Sample Content Filter">
+<!ENTITY jssamplelink.title             "Sample JavaScript Filter">
+<!ENTITY aboutjsfilter.label            "When content filters are Off, JavaScript is disabled by default. You have an opportunity to turn on JavaScript on a per-site basis. Use this filter file to set up your JS whitelist. If content filters are on, JavaScript is enabled for all sites in the content whitelist.">
+<!ENTITY chooseBtn.label               "Choose...">
+<!ENTITY jsallenable.desc              "Chosing this option will enable JavaScript on all pages except where exempt in filters file">
+<!ENTITY jsallenable.label             "Enable JavaScript on all pages">
+<!ENTITY networkfilters.caption         "Network Protocol Filters">
+<!ENTITY fileProto.label                "Enable file:">
+<!ENTITY ftpProto.label                 "Enable ftp:">
+<!ENTITY aboutProto.label               "Enable about:">
+<!ENTITY popup.caption                  "Popup Blocker Filter">
+<!ENTITY popup.button.label             "Popup Blocker Perferences">
+<!ENTITY cookie.caption                 "Cookie Exceptions Filter">
+<!ENTITY cookie.button.label            "Cookie Exceptions">
+
+<!-- Session Tab -->
+<!ENTITY reset.caption                  "Reset Session">
+<!ENTITY useragent.caption              "User Agent">
+<!ENTITY inactive.label                 "Set Inactive Terminal">
+<!ENTITY cache.caption                  "Cache">
+<!ENTITY aboutcache.label               "Enabling the disk cache makes cached pages and urlbar dropdown history accessible to the Kiosk across sessions.">
+<!ENTITY cacheenable.label              "Enable Disk Cache">
+<!ENTITY aboutmemcache.label            "Enabling Session History makes current back forward page history accessible to the Kiosk across sessions.">
+<!ENTITY cachememenable.label           "Preserve Session History">
+<!ENTITY aboutcookies.label             "Enabling Cookies allows cookies set in the Kiosk to persist across sessions.">
+<!ENTITY cookiesenable.label            "Preserve Session Cookies">
+<!ENTITY aup.caption                    "Acceptable Use Policy (AUP)">
+<!ENTITY aupenable.label                "Enable AUP">
+<!ENTITY aboutaup.label                 "Enabling this feature prompts the user for each session to accept the Kiosk terms of use. Once accepted, they will not be prompted again during the session. If declined, they will be prompted every time they try to access a page outside the exempt list. This is a list of sites that the user can browse freely without needing to agree to the AUP. The file has to be in text format with a .txt extension.">
+<!ENTITY aupfile.label                  "AUP File:">
+<!ENTITY aupexempt.label                "Exempt List:">
+<!ENTITY aupsamplelink.title            "Sample AUP Exempt List">
+
+<!-- Allow tabs -->
+<!ENTITY tabsbox.caption                "Tabbed Browsing">
+<!ENTITY abouttabs.label              "This setting allows spawning of news tabs for new window requests (link targets, window.open ...). When not enabled, all pages are loaded in main content area.">
+<!ENTITY tabsenable.label               "Enable tabbed browsing">
+
+<!-- UI customisation -->
+<!ENTITY customizebox.caption           "Customization">
+<!ENTITY uiwidgets.label                "UI Widgets:">
+<!ENTITY uiwidgetsshow.label            "Show">
+<!ENTITY uiwidgetshide.label            "Hide All">
+<!ENTITY hideuimessage.label            "Selecting this option will launch the kiosk in true full screen mode. This means no UI widgets, and the maximizing of the content area for Web page viewing.">
+<!ENTITY scrollbars.caption             "Scrollbars">
+<!ENTITY scrollbarslink.label           "View Instructions for sizing scrollbars...">
+<!ENTITY scrollbarslink.title           "Kiosk Scrollbars">
+<!ENTITY save.caption                   "Save Document">
+<!ENTITY savebtn.label                  "Save Button Label:">
+<!ENTITY savefp.label                   "Use File Picker">
+<!ENTITY saveloc.label                  "Default location for Saved Files: Downloads folder">
+<!ENTITY reset.caption                  "Reset (Logout) Button">
+<!ENTITY resetbtn.label                 "Reset Button Label:">
+<!ENTITY reset.label                    "Reset">
+
+<!-- Admin Tab -->
+<!ENTITY passwordbox.caption            "Encrypted Password">
+<!ENTITY readwhere.label                "Save password to:">
+<!ENTITY fromregistry.label             "Registry">
+<!ENTITY fromprefs.label                "Preferences">
+<!ENTITY aboutpassword.label            "Enter a password to change the login access for this window.">
+<!ENTITY password.label                 "Password">
+<!ENTITY printbox.caption               "Printing">
+<!ENTITY aboutprint.label               "Select whether or not to use a print dialog or silent printing ...">
+<!ENTITY printSettings.label            "Select type of printing">
+<!ENTITY print.silent.label             "Silent">
+<!ENTITY print.dialog.label             "Dialog">
+
+<!-- Buttons -->
+<!ENTITY restoreBtn.label               "Restore Defaults">
+<!ENTITY restoreBtn.tooltip             "Set all Kiosk settings back to their default values">
+<!ENTITY okBtn.label                    "OK">
+<!ENTITY cancelBtn.label                "Cancel">

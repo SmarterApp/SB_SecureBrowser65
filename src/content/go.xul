@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE window SYSTEM "chrome://bmakiosk/locale/bmakiosk.dtd">
+
+<window id="go-window"
+        xmlns:html="http://www.w3.org/TR/REC-html40"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        title= "Launch Kiosk"
+        titlemodifier="Kiosk Launcher"
+        onload="launchKiosk()">
+
+<script type="text/javascript" src="chrome://bmakiosk/content/js/go.js"/>
+
+<vbox id="appcontent" flex="100%">
+
+  <description>Hi! If you see this text, something has gone wrong.</description>
+
+</vbox>
+
+</window>

@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!--
+The contents of this file are subject to the Mozilla Public
+License Version 1.1 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of
+the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS
+IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+implied. See the License for the specific language governing
+rights and limitations under the License.
+
+The Original Code is copyright (C) 2004 Jim Massey.
+The Initial Developer of the Original Code is Jim Massey
+
+Portions created by Mozdev Group, Inc. are
+Copyright (C) 2004 Mozdev Group, Inc.  All
+Rights Reserved.
+
+Original Author: Brian King <brian@mozdevgroup.com>
+Contributor(s): MozdevGroup Inc.
+-->
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?> 
+
+<!DOCTYPE dialog [
+  <!ENTITY window.title "Kiosk Acceptable Use Policy">
+]>
+
+<dialog id="aupDialog"
+        title="&window.title;"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
+        onload="aupOnLoad();"
+        buttons="accept,cancel"
+        ondialogaccept="return onAccept();"
+        ondialogcancel="return onDecline();"
+        height="800"
+        width="600">
+    
+  <script type="application/x-javascript">
+  <![CDATA[
+    var permission;
+
+    // main string bundle
+    var gKioskBundle;
+
+    var aupPage;
+
+    function aupOnLoad()
+    {
+      // Set up the string bundle
+      gKioskBundle = document.getElementById("bundle_bmakiosk");
+
+      permission = window.arguments[0];
+
+      // prefs
+      aupPage = window.arguments[1];
+
+      // Set the text on buttons
+      document.documentElement.getButton("accept").label = 
+          gKioskBundle.getString("accept.button");
+      document.documentElement.getButton("cancel").label = 
+          gKioskBundle.getString("decline.button");
+
+      loadAupPage();
+    }
+
+    function loadAupPage()
+    {
+      var browser = document.getElementById("aup-content");
+      if (!aupPage || aupPage == "[No file specified]")
+        aupPage = "chrome://bmakiosk/content/AUP.html";
+      browser.loadURI(aupPage)
+    }
+
+    function onAccept ()
+    {
+      permission.granted = true;
+    }
+
+    function onDecline ()
+    {
+      permission.granted = false;
+    }
+  ]]>
+  </script>
+
+  <script type="application/x-javascript" src="chrome://jslib/content/jslib.js" />
+
+  <stringbundle id="bundle_bmakiosk" src="chrome://bmakiosk/locale/bmakiosk.properties"/>
+
+  <vbox id="appcontent" flex="1">
+    <hbox id="browser" flex="1">
+      <browser id="aup-content" flex="1" style="background-color: white;" /> 
+    </hbox>
+  </vbox>
+
+</dialog>

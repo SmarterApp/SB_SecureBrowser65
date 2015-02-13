@@ -1,0 +1,11 @@
+DEPTH			= ../..
+topsrcdir		= @top_srcdir@
+srcdir			= @srcdir@
+VPATH			= @srcdir@
+
+EXTRA_PP_COMPONENTS	=           \
+	BMAKioskComponent.manifest  \
+	bmakiosk-service.js         \
+	$(NULL)
+
+include $(topsrcdir)/config/rules.mk

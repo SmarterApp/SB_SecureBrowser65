@@ -1,0 +1,281 @@
+# ***** BEGIN LICENSE BLOCK *****
+# Version: MPL 1.1/GPL 2.0/LGPL 2.1
+#
+# The contents of this file are subject to the Mozilla Public License Version
+# 1.1 (the "License"); you may not use this file except in compliance with
+# the License. You may obtain a copy of the License at
+# http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS IS" basis,
+# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+# for the specific language governing rights and limitations under the
+# License.
+#
+# The Original Code is the Mozilla Browser code.
+#
+# The Initial Developer of the Original Code is
+# Netscape Communications Corporation.
+# Portions created by the Initial Developer are Copyright (C) 2002
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s):
+#  Brian Ryner <bryner@brianryner.com>
+#
+# Alternatively, the contents of this file may be used under the terms of
+# either the GNU General Public License Version 2 or later (the "GPL"), or
+# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+# in which case the provisions of the GPL or the LGPL are applicable instead
+# of those above. If you wish to allow use of your version of this file only
+# under the terms of either the GPL or the LGPL, and not to allow others to
+# use your version of this file under the terms of the MPL, indicate your
+# decision by deleting the provisions above and replace them with the notice
+# and other provisions required by the GPL or the LGPL. If you do not delete
+# the provisions above, a recipient may use your version of this file under
+# the terms of any one of the MPL, the GPL or the LGPL.
+#
+# ***** END LICENSE BLOCK *****
+
+DEPTH		= ..
+topsrcdir	= @top_srcdir@
+srcdir		= @srcdir@
+VPATH		= @srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+include $(topsrcdir)/config/config.mk
+
+DIRS = ../browser jslib branding/$(MOZ_PKG_SPECIAL) components app public plugins java bin lib dictionaries src 
+
+ifeq ($(OS_ARCH),WINNT)
+DIRS += redist
+endif
+
+ifneq ($(OS_ARCH),WINNT)
+DIRS += audiorecorder/OpusTools audiorecorder
+endif
+
+DEFINES += -DMOZ_APP_VERSION=\"$(MOZ_APP_VERSION)\" -DMOZ_APP_NAME=\"$(MOZ_APP_NAME)\"
+
+ifdef MOZ_ENABLE_LIBXUL
+ifeq ($(OS_ARCH),WINNT)
+ifdef MOZ_INSTALLER
+DIRS += installer/windows
+endif
+else
+DIRS += installer
+endif
+endif
+
+DATE_STAMP=`date +"%Y-%m-%d"`
+
+include $(topsrcdir)/config/rules.mk
+
+test-url:
+	echo instructions: export KIOSK_TEST_URL=-DKIOSK_TEST_URL;
+
+run:
+ifeq ($(OS_ARCH),Linux)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME);
+else 
+ifeq ($(OS_ARCH),WINNT)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME);
+else
+ifdef MOZ_DEBUG
+	@cd $(DIST)/; ./$(MOZ_APP_NAME)Debug.app/Contents/MacOS/./$(MOZ_APP_NAME);
+else
+	@open $(DIST)/$(MOZ_APP_NAME).app;
+endif
+endif
+endif
+
+run-verbose:
+ifeq ($(OS_ARCH),Darwin)
+ifdef MOZ_DEBUG
+	@export OPENKIOSK_JAVASCRIPT_DEBUGGING=1; cd $(DIST)/; ./$(MOZ_APP_NAME)Debug.app/Contents/MacOS/./$(MOZ_APP_NAME);
+else
+	@export OPENKIOSK_JAVASCRIPT_DEBUGGING=1; cd $(DIST)/; ./$(MOZ_APP_NAME).app/Contents/MacOS/./$(MOZ_APP_NAME);
+endif
+endif
+ifeq ($(OS_ARCH),Linux)
+	@export OPENKIOSK_JAVASCRIPT_DEBUGGING=1; cd $(DIST)/bin; ./$(MOZ_APP_NAME);
+endif
+
+############
+#
+#  run like this:  
+#                 $ make run-url url=http://www.google.com
+#
+############
+run-url:
+ifeq ($(OS_ARCH),Linux)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME) $(url);
+else 
+ifeq ($(OS_ARCH),WINNT)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME) $(url);
+else
+ifeq ($(OS_ARCH),Darwin)
+	@cd $(DIST)/; ./$(MOZ_APP_NAME).app/Contents/MacOS/./$(MOZ_APP_NAME) $(url);
+endif
+endif
+endif
+
+run-debug:
+ifeq ($(OS_ARCH),Linux)
+	@cd $(DIST)/bin; ./run-mozilla.sh -g;
+endif
+
+run-profile:
+ifeq ($(OS_ARCH),Linux)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME) -P;
+endif
+
+run-admin:
+ifeq ($(OS_ARCH),Linux)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME) -options admin -P;
+endif
+ifeq ($(OS_ARCH),WINNT)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME) -options admin;
+else
+ifdef MOZ_DEBUG
+	@cd $(DIST)/; ./$(MOZ_APP_NAME)Debug.app/Contents/MacOS/./$(MOZ_APP_NAME) -options admin;
+endif
+ifeq ($(OS_ARCH),Darwin)
+	@cd $(DIST)/; ./$(MOZ_APP_NAME).app/Contents/MacOS/./$(MOZ_APP_NAME) -options admin;
+endif
+endif
+
+run-browser:
+ifeq ($(OS_ARCH),Linux)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME) -P -chrome chrome://browser/content/;
+else 
+ifeq ($(OS_ARCH),WINNT)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME) -chrome chrome://browser/content/;
+else
+ifdef MOZ_DEBUG
+	@cd $(DIST)/; ./$(MOZ_APP_NAME)Debug.app/Contents/MacOS/./$(MOZ_APP_NAME) -chrome chrome://browser/content/;
+else
+	@cd $(DIST)/; ./$(MOZ_APP_NAME).app/Contents/MacOS/./$(MOZ_APP_NAME) -chrome chrome://browser/content/;
+endif
+endif
+endif
+
+run-proxy:
+ifeq ($(OS_ARCH),Linux)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME) -options proxy -P;
+endif
+ifeq ($(OS_ARCH),WINNT)
+	@cd $(DIST)/bin; ./$(MOZ_APP_NAME) -options proxy;
+else
+ifdef MOZ_DEBUG
+	@cd $(DIST)/; ./$(MOZ_APP_NAME)Debug.app/Contents/MacOS/./$(MOZ_APP_NAME) -options proxy;
+else
+	@cd $(DIST)/; ./$(MOZ_APP_NAME).app/Contents/MacOS/./$(MOZ_APP_NAME) -options proxy;
+endif
+endif
+
+msi: distro msi-internal
+
+msi-internal:
+	$(MAKE) -C installer/windows/msi msi-installer;
+
+#sign-setup-exe:
+#	@echo signing Setup.exe ...; \
+#	cp $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP)_$(MOZ_APP_VERSION)-Setup.exe $(srcdir)/sign; \
+#	cd $(srcdir)/sign;            \
+#	cmd /c "signtool sign /f air.pfx /p Airpass! $(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP)_$(MOZ_APP_VERSION)-Setup.exe";
+#	mv $(srcdir)/sign/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP)_$(MOZ_APP_VERSION)-Setup.exe $(DIST);
+#	cp $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP)_$(MOZ_APP_VERSION)-Setup.exe ~/Desktop;
+
+distro-proxy:
+	export PROXY_DISTRO=proxy-; \
+	$(MAKE) distro;
+distro:
+ifeq ($(OS_ARCH),Darwin)
+	cd $(DIST)/universal/; find . -name CVS | sed -e's: :\\ :g' | xargs rm -rf;
+endif
+ifeq ($(OS_ARCH),WINNT)
+	$(MAKE) -C installer/windows uninstaller
+	echo;
+	echo Finished building uninstaller ...;
+	echo;
+	$(MAKE) -C installer/windows installer 
+	mv $(DIST)/install/sea/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION).en-US.win32-$(MOZ_PKG_SPECIAL).installer.exe $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP)_$(MOZ_APP_VERSION)-Setup.exe;
+else
+	rm -rf $(DIST)/*.dmg;
+	$(MAKE) -C installer
+ifeq ($(OS_ARCH),Darwin)
+	mv $(DIST)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION).en-US.mac-$(MOZ_PKG_SPECIAL).dmg $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP)_$(MOZ_APP_VERSION).dmg
+	rm -f ~/Desktop/$(MOZ_APP_NAME)*.dmg;
+	cp $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP)_$(MOZ_APP_VERSION).dmg ~/Desktop/
+else
+	mv $(DIST)/$(MOZ_APP_NAME)-$(MOZ_APP_VERSION).en-US.linux-i686-$(MOZ_PKG_SPECIAL).tar.bz2 $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP).tar.bz2
+	$(MAKE) bundle;
+	rm -f ~/Desktop/$(MOZ_APP_NAME)*.tar.bz2
+	cp $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP).tar.bz2 ~/Desktop/
+endif
+endif
+
+package-xpis:
+	$(MAKE) -C audiorecorder package;
+
+bundle:
+	@echo "-------- CREATING JAVA SYMLINKS --------"; 
+	rm -rf /tmp/kiosk-tarball;
+	mkdir -p /tmp/kiosk-tarball;
+	tar xfjv $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP).tar.bz2;
+	mv $(MOZ_APP_NAME) /tmp/kiosk-tarball;
+	cd /tmp/kiosk-tarball/$(MOZ_APP_NAME)/plugins/; \
+	rm -f libjavaplugin*.so; \
+	ln -sf ../jre-1.6.0_31/lib/i386/libnpjp2.so; \
+	ls -l; 
+	chmod 555 /tmp/kiosk-tarball/$(MOZ_APP_NAME)/install-icon.sh; \
+	mv /tmp/kiosk-tarball/$(MOZ_APP_NAME) . ;
+	rm -f $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP).tar.bz2;
+	tar cfjv $(DIST)/$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP).tar.bz2 $(MOZ_APP_NAME) 
+	rm -rf /tmp/kiosk-tarball;
+
+run-distro-proxy:
+	export PROXY_DISTRO=proxy-; \
+	$(MAKE) run-distro;
+
+run-distro:
+ifeq ($(OS_ARCH),WINNT)
+	$(DIST)/./$(MOZ_APP_NAME)-$(PROXY_DISTRO)$(DATE_STAMP)_$(MOZ_APP_VERSION)-Setup.exe; 
+endif
+
+run-msi:
+ifeq ($(OS_ARCH),WINNT)
+	cd $(DIST); \
+	cmd /c "msiexec /i  $(MOZ_APP_NAME)-$(DATE_STAMP).msi /passive"; 
+endif
+
+run-custom-msi:
+ifeq ($(OS_ARCH),WINNT)
+	cd $(DIST); \
+	cmd /c "msiexec /i  $(MOZ_APP_NAME)-$(DATE_STAMP).msi /passive INSTALLDIR=C:\tmp"; 
+endif
+
+run-msi-log:
+ifeq ($(OS_ARCH),WINNT)
+	cd $(DIST); \
+	cmd /c "msiexec /i  $(MOZ_APP_NAME)-$(DATE_STAMP).msi /l*v C:\tmp\msi.log"; 
+endif
+
+uninstall-msi:
+ifeq ($(OS_ARCH),WINNT)
+	cd $(DIST); \
+	cmd /c "msiexec /x  $(MOZ_APP_NAME)-$(DATE_STAMP).msi /passive"; 
+endif
+
+clean-installers:
+ifeq ($(OS_ARCH),WINNT)
+	rm -rf $(DIST)/*.exe;
+	rm -rf $(DIST)/*.msi;
+endif
+
+version:
+	echo $(MOZ_APP_VERSION);
+
+appname:
+	echo $(MOZ_APP_NAME);
+

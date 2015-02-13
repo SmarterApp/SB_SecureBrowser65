@@ -1,0 +1,124 @@
+# Version: MPL 1.1/GPL 2.0/LGPL 2.1
+#
+# The contents of this file are subject to the Mozilla Public License Version
+# 1.1 (the "License"); you may not use this file except in compliance with
+# the License. You may obtain a copy of the License at
+# http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS IS" basis,
+# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+# for the specific language governing rights and limitations under the
+# License.
+#
+# The Original Code is Securebrowser.
+#
+# The Initial Developer of the Original Code is
+# Securebrowser for Securebrowser Free Software Development
+# Portions created by the Initial Developer are Copyright (C) 2009
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s): 
+#
+# Alternatively, the contents of this file may be used under the terms of
+# either the GNU General Public License Version 2 or later (the "GPL"), or
+# the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+# in which case the provisions of the GPL or the LGPL are applicable instead
+# of those above. If you wish to allow use of your version of this file only
+# under the terms of either the GPL or the LGPL, and not to allow others to
+# use your version of this file under the terms of the MPL, indicate your
+# decision by deleting the provisions above and replace them with the notice
+# and other provisions required by the GPL or the LGPL. If you do not delete
+# the provisions above, a recipient may use your version of this file under
+# the terms of any one of the MPL, the GPL or the LGPL.
+#
+
+
+DEPTH=../../..
+topsrcdir=@top_srcdir@
+srcdir=@srcdir@
+VPATH=@srcdir@
+
+include $(DEPTH)/config/autoconf.mk
+
+DEFINES += -DFLOATING_POINT
+
+MODULE           = opustools
+LIBRARY_NAME     = opustools
+
+ifeq ($(OS_ARCH),Darwin)
+os_include=osx
+endif
+
+ifeq ($(OS_ARCH),Linux)
+os_include=linux
+# DEFINES += -DCL_DISABLE_SSE2
+endif
+
+ifeq ($(OS_ARCH),WINNT)
+os_include=win
+endif
+
+LOCAL_INCLUDES = -I$(srcdir)/../include/$(os_include) -I$(srcdir)/../include/$(os_include)/speex
+
+CPPSRCS=                     \
+  	audio-in.cpp         \
+  	diag_range.cpp       \
+  	lpc.cpp              \
+  	opus_header.cpp      \
+  	resample.cpp         \
+  	unicode_support.cpp  \
+	$(NULL)
+
+ifeq ($(OS_ARCH),Darwin)
+
+SHARED_LIBRARY_LIBS     +=                                                 \
+			$(srcdir)/../libs/osx/libopus.a                    \
+			$(srcdir)/../libs/osx/libspeexdsp.a                \
+			$(NULL)
+
+endif
+
+ifeq ($(OS_ARCH), Linux)
+LINUX_SHARED_LIBRARY_LIBS     +=                                             \
+			$(srcdir)/libs/linux/libboost_system.a               \
+			$(srcdir)/libs/linux/libboost_thread.a               \
+			$(srcdir)/libs/linux/libogg.a                        \
+			$(srcdir)/libs/linux/libopus.a                       \
+			$(srcdir)/libs/linux/libportaudio.a                  \
+			$(srcdir)/libs/linux/libjson_spirit.a                \
+			$(NULL)
+endif
+
+include $(topsrcdir)/config/rules.mk
+
+ifeq ($(OS_ARCH),WINNT)
+CXXFLAGS := $(filter-out -W3, $(CXXFLAGS))
+
+libs::
+	@lib *.obj -OUT:$(LIBRARY_NAME).lib
+endif
+
+ifeq ($(OS_ARCH),Linux)
+
+CXXFLAGS := $(filter-out -Wall, $(CXXFLAGS)) -msse
+
+EXTRA_FLAGS = -lasound -shared *.o -o 
+
+libs::
+	@ar -cr $(LIBRARY_NAME).a *.o
+
+endif
+
+ifeq ($(OS_ARCH),Darwin)
+CXXFLAGS := $(filter-out -Wall -fno-rtti -fno-exceptions -fvisibility=hidden, $(CXXFLAGS)) -fvisibility=default 
+
+libs::
+	@ar -cr $(LIBRARY_NAME).a *.o
+endif
+
+clean::
+	@rm -rf *.a *.o *.so .deps;
+
+pete:
+	@echo $(CXXFLAGS)
+
