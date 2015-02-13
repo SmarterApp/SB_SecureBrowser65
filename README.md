@@ -57,3 +57,9 @@ On any **CentOS 5.3 - 5.11** machine:
 
 * switch to that user
 * clone the Secure Browser 6.5 repo (e.g. `hg clone https://BBUSERNAME@bitbucket.org/sbacoss/securebrowser65_release`)
+
+#### 8. Generate a v4 GUID
+Get a [v4 GUID](https://www.uuidgenerator.net/version4) and place into `/src/branding/SBACSecureBrowser/uuid.txt` (only for a single custom build, not for every version)
+
+#### 9. Add target URL
+Obtain the URL of the TDS Student home page for the browser, uuencode it, and insert into `/src/branding/SBACSecureBrowser/pref/kiosk-branding.js` as defined within the file. The current default build will point the browser to http://browser.smarterbalanced.org/landing.
