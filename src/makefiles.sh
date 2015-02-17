@@ -41,8 +41,6 @@ kiosk/Makefile
 kiosk/src/Makefile
 kiosk/app/Makefile
 kiosk/installer/Makefile
-kiosk/installer/windows/Makefile
-kiosk/installer/windows/msi/Makefile
 $MOZ_BRANDING_DIRECTORY/Makefile
 "
 
