@@ -2,7 +2,7 @@
 The [SmarterApp](http://smarterapp.org) Secure Browser 6.5 project builds upon the Mozilla Firefox source code and creates a secure browser that is used to deliver student assessments. The Secure Browser implements security features such as not permitting multiple tabs, browsing arbitrary URLs and enforcing a white list of applications.
 
 ## License ##
-This project is licensed under the [Mozilla open source license v.2.0](https://www.mozilla.org/MPL/2.0/).
+This project is licensed under the [Mozilla open source license v.2.0](https://www.mozilla.org/MPL/2.0/). The Linux 6.5 Secure Browser is based on the Mozilla Firefox source (FIREFOX_10_0_12esr_RELEASE).
 
 ## Getting Involved ##
 We would be happy to receive feedback on its capabilities, problems, or future enhancements:
@@ -15,7 +15,6 @@ We would be happy to receive feedback on its capabilities, problems, or future e
 
 This version of the Secure Browser is available for the Linux platform. Each build follows a similar process, as described below. From a high-level perspective, building a custom secure browser involves:
 
-* Cloning the Mozilla Firefox source (FIREFOX_10_0_12esr_RELEASE)
 * Cloning this SecureBrowser project
 * Applying a few customizations such as the target URL
 * Running the automated build script
