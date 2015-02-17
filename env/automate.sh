@@ -114,75 +114,6 @@ function makeBuild()
  
 #### OS Specific functions ##################################################
 
-#### Windows #####
-function windowsBuild()
-{
-	setupSource
-	cd ./mozilla/$codename
-	echo "OS is Windows";
-# commented out after talking to Pete
-#	mkdir -p redist/microsoft/system;
-#	echo "Fetching redist MS dll's ...";
-#	wget --no-check-certificate -N -P redist/microsoft/system/ $MDG_REDIST_URL/msvcirt.dll;
-#	wait;
-#	wget --no-check-certificate -N -P redist/microsoft/system/ $MDG_REDIST_URL/msvcp71.dll;
-#	wait;
-#	wget --no-check-certificate -N -P redist/microsoft/system/ $MDG_REDIST_URL/msvcr71.dll;
-#	wait;
-#	wget --no-check-certificate -N -P redist/microsoft/system/ $MDG_REDIST_URL/msvcrt.dll;
-#	wait;
-# cd to build root
-	cd ./../../
-	
-# check out Java runtime environment
-	make -f kiosk-client.mk java-checkout
-	
-# check out Windows dlls
-	make -f kiosk-client.mk win32-dll-checkout
-
-# setup branding
-setBranding
-	
-# cd to mozilla dir for build prep
-cd ./mozilla
-
-# Configure 
-makeConfigure
-
-#build after Configure
-makeBuild
-
-
-# go to distro directory
-cd ./../opt*
-cd $codename
-echo " .... entering `pwd` directory..."
-
-# run distro
-make distro || { echo " Make Error: distro failed, please verify build ...."; exit 1; }
-
-# Next Steps: automate MSI In classpath, this done at system provisioning
-make msi || { echo " MSI Build failed, please verify build ...."; exit 1; }
-
-# Move to release directory
-echo "Move build"
-echo "...create release directory ..."
-mkdir ./../../Release
-echo ".............................."
-echo ".............................."
-echo " ......move artifact........."
-echo " ............................."
-echo "..............................."
-mv ~/Desktop/*.msi  ./../../Release/
-echo "....build moved to release dir ...."
-echo "...................................."
-echo "....................................."
-
-}
-
-#### Windows end ###
-
-
 #### Centos  ######
 function linuxBuild()
 {
@@ -225,64 +156,6 @@ echo "... build moved to release dir ...."
 }
 
 #### Centos end ####
-
-#### Mac #######
-function macBuild()
-{
-setupSource
-
-# setup branding
-setBranding
-
-# goto Mozilla dir to prep build
-cd ./mozilla
-
-# Configure 
-makeConfigure
-
-
-#build after Configure
-makeBuild
-
-
-# go to s.b. build directory
-cd ./../opt*
-
-# after checking with Balaji
-cd  ./i386/$codename
-#cd  ./i386
-make || { echo " Make Error: 386 make build failed at first run"; exit 1;   }
-make || { echo " Make Error: 386 make build failed at second run" ; exit 1; }
-
-# after checking with Balaji
-cd ./../../x86_64/$codename
-#cd ./../x86_64
-make || { echo " Make Error: x86_64 make build failed at first run"; exit 1;  }
-make || { echo " Make Error: x86_64  make build failed at second run"; exit 1; }
-
-cd ./../../../mozilla
-
-# commented out after checking with Balaji
-#cd ./../../mozilla
-
-#build before distro
-makeBuild
-
-# build distro
-cd ./../opt*
-cd  ./i386/$codename
-make distro || { echo " Make Error: distro failed, please verify build ...."; exit 1; }
-
-echo "Move build"
-echo "...create release directory..."
-mkdir ./../../../Release
-mv ~/Desktop/*.dmg  ./../../../Release/
-echo "... build moved to release dir ...."
-
-}
-
-#### Mac end #####
-
 
 
 #### Build Steps: run time ###################################################
@@ -358,20 +231,6 @@ then
 	{
 		echo " running $OS build "
 		linuxBuild
-		exit 0 ;
-	}
-elif [ "$OS" = "win32" ]
-then
-	{
-		echo " running $OS build "
-		windowsBuild
-		exit 0 ;
-	}
-elif [ "$OS" = "OSX" ]
-then
-	{
-		echo " running $OS build "
-		macBuild
 		exit 0 ;
 	}
 else
